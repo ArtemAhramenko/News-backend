@@ -23,5 +23,4 @@ public class MainController {
         System.out.println(user.getUsername() + ' ' + user.getEmail() + ' ' + user.getPassword());
         return JSONObject.quote("Sucsess");
     }
-
 }
