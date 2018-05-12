@@ -7,12 +7,19 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@CrossOrigin
 public class ArticleController {
     @Autowired
     private ArticlesService articlesService;
 
     @RequestMapping(path="/getarticle")
     public List<Articles> getAllArticles(){
-        return articlesService.getAllArticles();
+        List<Articles> news = articlesService.getAllArticles();
+        return news;
+    }
+
+    @RequestMapping(path="/addarticle")
+    public void addArticles(Articles articles){
+        articlesService.addArticle(articles);
     }
 }

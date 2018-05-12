@@ -4,6 +4,7 @@ import com.news.app.entity.Articles;
 import com.news.app.repository.ArticlesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -15,7 +16,7 @@ public class ArticlesService {
     @Autowired
     private ArticlesRepository articlesRepository;
 
-    private List<Articles> articles = new ArrayList<>(Arrays.asList(new Articles("title", "description", "content" )));
+ //   private List<Articles> articles = new ArrayList<>(Arrays.asList(new Articles("title", "description", "content" )));
 
     public List<Articles> getAllArticles(){
         List<Articles> articles = new ArrayList<>();
