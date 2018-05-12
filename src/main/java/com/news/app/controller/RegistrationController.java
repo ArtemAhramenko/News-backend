@@ -13,6 +13,7 @@ public class RegistrationController {
     @Autowired
     private RegistrationService registrationService;
 
+    @CrossOrigin
     @PostMapping
     public RegistrationRequestDto addUser (@RequestBody RegistrationRequestDto registrationRequestDto){
         return registrationService.register(registrationRequestDto);
