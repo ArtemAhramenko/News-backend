@@ -4,10 +4,12 @@ import com.news.app.entity.Articles;
 import com.news.app.service.ArticlesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @CrossOrigin
@@ -24,5 +26,10 @@ public class ArticleController {
     public void addArticles(Articles articles){
         articlesService.addArticle(articles);
     }
-<<<<<<< HEAD
+
+    @RequestMapping(path = "/getarticleid/{id}")
+    public Optional<Articles> getArticleId(@PathVariable Long id){
+        Optional<Articles> ar = articlesService.getArticleId(id);
+        return ar;
+    }
 }

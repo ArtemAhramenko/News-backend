@@ -16,17 +16,14 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @RequestMapping(path="/getuser")
-    public List<User> getAllUsers(){
+    @RequestMapping(path = "/getuser")
+    public List<User> getAllUsers() {
         return userService.getAllUsers();
     }
 
-    @RequestMapping(path="/adduser")
-    public void addArticles(User user){
+    @RequestMapping(path = "/adduser")
+    public void addArticles(User user) {
         userService.addUser(user);
     }
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> master
+

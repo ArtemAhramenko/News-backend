@@ -1,16 +1,11 @@
 package com.news.app.entity.dto;
 
+
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.stereotype.Component;
 
-/**
- * @author v.tarasevich
- * @version 1.0
- * @since 09.09.2017 18:02
- */
-@Getter
-@Setter
+
 @Component
 public class RegistrationRequestDto {
     private String username;

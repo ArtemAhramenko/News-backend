@@ -21,7 +21,6 @@ public class Articles {
 
     @NotBlank
     private String content;
-
     @NotBlank
     private String description;
 
@@ -36,12 +35,6 @@ public class Articles {
 
     public Articles(){
 
-    }
-
-    public Articles(String title, String description, String content){
-        this.title = title;
-        this.description = description;
-        this.content = content;
     }
 
     public Long getId() {
