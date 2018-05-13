@@ -1,12 +1,11 @@
 package com.news.app.controller;
 
-import com.news.app.entity.Articles;
 import com.news.app.entity.User;
-import com.news.app.repository.UserRepository;
-import com.news.app.service.ArticlesService;
 import com.news.app.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
@@ -26,4 +25,8 @@ public class UserController {
     public void addArticles(User user){
         userService.addUser(user);
     }
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> master
