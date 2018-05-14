@@ -10,8 +10,12 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping(value = "/registration")
 public class RegistrationController {
 
+    private final RegistrationService registrationService;
+
     @Autowired
-    private RegistrationService registrationService;
+    public RegistrationController(RegistrationService registrationService) {
+        this.registrationService = registrationService;
+    }
 
     @CrossOrigin
     @PostMapping

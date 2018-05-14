@@ -12,8 +12,12 @@ import java.util.List;
 @RestController
 @CrossOrigin
 public class ArticleController {
+    private final ArticlesService articlesService;
+
     @Autowired
-    private ArticlesService articlesService;
+    public ArticleController(ArticlesService articlesService) {
+        this.articlesService = articlesService;
+    }
 
     @RequestMapping(path="/getarticle")
     public List<Articles> getAllArticles(){

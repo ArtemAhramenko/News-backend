@@ -11,8 +11,12 @@ import org.springframework.stereotype.Service;
 @Service
 public class RegistrationImpl implements RegistrationService {
 
+    private final RegistrationRepository registrationRepository;
+
     @Autowired
-    private RegistrationRepository registrationRepository;
+    public RegistrationImpl(RegistrationRepository registrationRepository) {
+        this.registrationRepository = registrationRepository;
+    }
 
     @Override
     public RegistrationRequestDto register(RegistrationRequestDto registrationRequestDto) {

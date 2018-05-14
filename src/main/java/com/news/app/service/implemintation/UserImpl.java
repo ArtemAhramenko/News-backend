@@ -12,8 +12,12 @@ import java.util.List;
 @Service
 public class UserImpl implements UserService {
 
+    private final UserRepository userRepository;
+
     @Autowired
-    private UserRepository userRepository;
+    public UserImpl(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     public List<User> getAllUsers(){
         List<User> users = new ArrayList<>();
