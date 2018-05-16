@@ -13,8 +13,12 @@ import java.util.List;
 @CrossOrigin
 public class UserController {
 
+    private final UserService userService;
+
     @Autowired
-    private UserService userService;
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
 
     @RequestMapping(path="/getuser")
     public List<User> getAllUsers(){

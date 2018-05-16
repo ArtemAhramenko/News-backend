@@ -10,6 +10,12 @@ public class User {
     private String username;
     private String email;
     private String password;
+    private Boolean isSendConfirm;
+    private Boolean isBlocked;
+    private String activationCode;
+
+    @Enumerated(EnumType.STRING)
+    private UserRole role;
 
     public User(){
 
@@ -45,5 +51,37 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public Boolean getSendConfirm() {
+        return isSendConfirm;
+    }
+
+    public void setSendConfirm(Boolean sendConfirm) {
+        isSendConfirm = sendConfirm;
+    }
+
+    public Boolean getBlocked() {
+        return isBlocked;
+    }
+
+    public void setBlocked(Boolean blocked) {
+        isBlocked = blocked;
+    }
+
+    public UserRole getRole() {
+        return role;
+    }
+
+    public String getActivationCode() {
+        return activationCode;
+    }
+
+    public void setActivationCode(String activationCode) {
+        this.activationCode = activationCode;
+    }
+
+    public void setRole(UserRole role) {
+        this.role = role;
     }
 }
