@@ -1,4 +1,4 @@
-package com.news.app.entity.dto;
+package com.news.app.entity.dto.registration;
 
 import lombok.Getter;
 import lombok.Setter;
