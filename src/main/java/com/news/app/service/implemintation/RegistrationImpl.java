@@ -45,7 +45,7 @@ public class RegistrationImpl implements RegistrationService {
         registrationRepository.save(newUser);
         if (!StringUtils.isEmpty(newUser.getEmail())) {
                 String message = String.format(
-                        "Hello, %s \n" +
+                        "Hello, %s.\n" +
                                 "Welcome to NewsSite. To confirm your registration visit next link: http://localhost:8080/activate/%s",
                         newUser.getUsername(),
                         newUser.getActivationCode()
