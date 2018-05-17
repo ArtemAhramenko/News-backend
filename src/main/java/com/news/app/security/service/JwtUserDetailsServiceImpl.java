@@ -8,10 +8,13 @@ import com.news.app.repository.RegistrationRepository;
 import com.news.app.repository.UserRepository;
 import com.news.app.security.model.JwtUserDetails;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 /**
  * @author v.tarasevich
@@ -19,25 +22,18 @@ import org.springframework.stereotype.Service;
  * @since 07.09.2017 14:24
  */
 @Service
-@RequiredArgsConstructor
 public class JwtUserDetailsServiceImpl implements UserDetailsService {
 
-
+    @Autowired
     private UserRepository userRepository;
-    private RegistrationRepository registrationDataRepository;
+    
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User byUsername = this.userRepository.findUserByUsername(username);
-        if (byUsername == null) {
-            RegistrationRequestDto registrationData = registrationDataRepository.findByUsername(username);
-            if (registrationData == null) {
-                throw new UserNotFoundException("User not found.");
-            } else {
-                throw new UnconfirmedUserException();
-            }
-        } else {
-            return new JwtUserDetails(byUsername);
-        }
+        System.out.println("!!!!!!!!!!!!!!!" + username);
+        User byUsername = this.userRepository.findByUsername(username);
+
+        return Optional.ofNullable(byUsername).map(JwtUserDetails::new)
+                .orElseThrow(() -> new RuntimeException("User not found"));
     }
 }

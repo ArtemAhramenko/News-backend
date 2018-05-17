@@ -9,10 +9,10 @@ import com.news.app.exception.registration.UsernameAlreadyExistException;
 import com.news.app.repository.RegistrationRepository;
 import com.news.app.repository.UserRepository;
 import com.news.app.service.RegistrationService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 
 import java.util.UUID;
 

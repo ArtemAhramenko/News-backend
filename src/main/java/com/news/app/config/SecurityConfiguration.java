@@ -26,14 +26,9 @@ import org.springframework.security.web.authentication.www.BasicAuthenticationFi
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
-    private static final String[] AUTH_POST_RESPONSE_WHITELIST = new String[]{"/auth/sign_in", "/auth/sign_up", "/auth/ulogin", "/auth/confirm", "/article/create_article"};
-    private static final String[] AUTH_SWAGGER_WHITELIST = {
-            "/v2/api-docs",
-            "/webjars/**",
-    };
-
+    private static final String[] AUTH_POST_RESPONSE_WHITELIST = new String[]{"/registration", "/auth" , "/socialAuth"};
     private static final String[] AUTH_GET_RESPONSE_WHITELIST = new String[]{
-            "/user/findall", "user/ban/{userId}", "/article/tags", "/article/genre"
+            "/getarticle", "/activate/{code}"
     };
 
 
@@ -79,8 +74,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                .antMatchers(AUTH_SWAGGER_WHITELIST)
-                .permitAll()
+                .antMatchers("/**").permitAll()
                 .and()
                 .csrf().disable()
                 .addFilterAfter(new JwtAuthenticationFilter(authenticationManagerBean()),
@@ -93,9 +87,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(final WebSecurity web) throws Exception {
         web.ignoring()
-                .antMatchers(HttpMethod.POST,
-                        AUTH_POST_RESPONSE_WHITELIST)
-                .antMatchers(AUTH_SWAGGER_WHITELIST)
+                .antMatchers(HttpMethod.POST, AUTH_POST_RESPONSE_WHITELIST)
                 .antMatchers(HttpMethod.GET, AUTH_GET_RESPONSE_WHITELIST)
                 .antMatchers(HttpMethod.OPTIONS, "/**");
     }
