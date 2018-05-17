@@ -31,10 +31,10 @@ public class AuthenticationHelper {
 
     private final static Logger logger = LoggerFactory.getLogger(AuthenticationHelper.class);
 
-    public static final String AUTHENTICATION_TOKEN_HEADER = "authentication";
+    public static final String AUTHENTICATION_TOKEN_HEADER = "Authentication";
 
-    private static final String AUTHENTICATION_TOKEN_EXPIRATION_TIME = "security.authentication.token.expiration_time";
-    private static final String AUTHENTICATION_TOKEN_GENERATION_SECRET = "security.authentication.token.generation.secret";
+    private static final Long AUTHENTICATION_TOKEN_EXPIRATION_TIME = 3600L;
+    private static final String AUTHENTICATION_TOKEN_GENERATION_SECRET = "changeMe";
 
     @Resource
     private Environment environment;
@@ -45,10 +45,10 @@ public class AuthenticationHelper {
 
     public String generateToken(final Long userId) {
         try {
-            TokenPayload payload = this.getPayload(userId);
+            TokenPayload payload = new TokenPayload(
+                    userId, Instant.now().getEpochSecond() + this.AUTHENTICATION_TOKEN_EXPIRATION_TIME);
             String token = this.objectMapper.writeValueAsString(payload);
-            String secret = environment.getProperty(AUTHENTICATION_TOKEN_GENERATION_SECRET);
-            return JwtHelper.encode(token, new MacSigner(secret)).getEncoded();
+            return JwtHelper.encode(token, new MacSigner(AUTHENTICATION_TOKEN_GENERATION_SECRET )).getEncoded();
         } catch (JsonProcessingException e) {
             logger.error(String.format("Error generating token.\n%s", e));
             throw new InternalAuthenticationServiceException("Error generating token.", e);
@@ -86,10 +86,4 @@ public class AuthenticationHelper {
         }
     }
 
-    private TokenPayload getPayload(final Long userId) {
-        String expTime = environment.getProperty(AUTHENTICATION_TOKEN_EXPIRATION_TIME);
-        Long tokenExpirationTime = Long.parseLong(expTime);
-        long expirationTime = Instant.now().getEpochSecond() + tokenExpirationTime;
-        return new TokenPayload(userId, expirationTime);
-    }
 }

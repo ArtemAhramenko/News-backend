@@ -27,6 +27,7 @@ public class UloginAuthentication {
         if (userService.findByUsername(loginRequestDto.getUsername()) == null){
             registrationService.register(loginRequestDto);
         }
+        System.out.println("@@@@@@@@@@@@@@@"  + loginRequestDto.getPassword());
         return loginRequestDto;
     }
 }

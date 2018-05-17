@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 
 @RestController
-@CrossOrigin
+@CrossOrigin(origins = "http://localhost:4200")
 public class RegistrationController {
 
     private final RegistrationService registrationService;
@@ -24,13 +24,11 @@ public class RegistrationController {
         this.registrationService = registrationService;
     }
 
-    @CrossOrigin
     @PostMapping("/registration")
     public RegistrationRequestDto addUser (@RequestBody RegistrationRequestDto registrationRequestDto){
         return registrationService.register(registrationRequestDto);
     }
 
-    @CrossOrigin
     @GetMapping("/activate/{code}")
     public String activate(Model model, @PathVariable String code) {
         boolean isActivated = registrationService.activateUser(code);
