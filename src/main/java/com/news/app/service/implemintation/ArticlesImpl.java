@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ArticlesImpl implements ArticlesService {
@@ -28,4 +29,6 @@ public class ArticlesImpl implements ArticlesService {
     public void addArticle(Articles article){
         articlesRepository.save(article);
     }
+
+    public Articles getArticleById(Long id) { return articlesRepository.findOne(id); }
 }

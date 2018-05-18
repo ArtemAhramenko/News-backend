@@ -24,16 +24,18 @@ public class Articles implements Serializable {
     private String title;
 
     @NotBlank
+    private String description;
+
+    @NotBlank
     private String content;
+
+    @NotBlank
+    private Long userId;
 
     @Column(nullable = false, updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
     @CreatedDate
-    private Date createdAt;
-    @Column(nullable = false)
-    @Temporal(TemporalType.TIMESTAMP)
-    @LastModifiedDate
-    private Date updatedAt;
+    private Date createdDate;
 
     public Long getId() {
         return id;
@@ -59,20 +61,20 @@ public class Articles implements Serializable {
         this.content = content;
     }
 
-    public Date getCreatedAt() {
-        return createdAt;
+    public Date getCreatedDate() {
+        return createdDate;
     }
 
-    public void setCreatedAt(Date createdAt) {
-        this.createdAt = createdAt;
+    public void setCreatedDate(Date createdDate) {
+        this.createdDate = createdDate;
     }
 
-    public Date getUpdatedAt() {
-        return updatedAt;
+    public String getDescription() {
+        return description;
     }
 
-    public void setUpdatedAt(Date updatedAt) {
-        this.updatedAt = updatedAt;
+    public void setDescription(String description) {
+        this.description = description;
     }
 }
 
