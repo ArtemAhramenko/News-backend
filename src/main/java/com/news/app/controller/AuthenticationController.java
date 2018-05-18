@@ -32,6 +32,7 @@ public class AuthenticationController {
     private LoginResponseDto addSocailUser(@RequestBody String token) {
         LoginRequestDto loginRequestDto = uloginParser.getUser(token);
         System.out.println(loginRequestDto.getUsername());
+        System.out.println(loginRequestDto.getPassword());
         return authenticationService.login(loginRequestDto);
     }
 

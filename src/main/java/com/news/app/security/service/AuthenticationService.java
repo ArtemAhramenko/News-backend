@@ -57,12 +57,15 @@ public class AuthenticationService {
             if (authResult.isAuthenticated()) {
                 JwtUserDetails userDetails = (JwtUserDetails) authResult.getPrincipal();
 
+                System.out.println("i'm here");
                 User user = userRepository.findOne(userDetails.getId());
                 if (Objects.isNull(user)) {
                     throw new JsonException("User not exist in system.");
                 }
-
-                String token = this.authenticationHelper.generateToken(userDetails.getId());
+                System.out.println(user.getUsername());
+                System.out.println(user.getPassword());
+                System.out.println(user.getRole());
+                String token = this.authenticationHelper.generateToken(userDetails.getId(), user.getRole());
 
                 return new LoginResponseDto(token);
             } else {

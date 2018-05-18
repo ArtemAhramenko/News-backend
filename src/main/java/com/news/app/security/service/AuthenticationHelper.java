@@ -2,7 +2,10 @@ package com.news.app.security.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.news.app.entity.EnumRoles;
+import com.news.app.entity.User;
 import com.news.app.security.exception.InvalidTokenAuthenticationException;
+import com.news.app.security.model.JwtUserDetails;
 import com.news.app.security.model.TokenPayload;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -18,7 +21,9 @@ import org.springframework.stereotype.Component;
 import javax.annotation.Resource;
 import java.io.IOException;
 import java.time.Instant;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 /**
  * @author v.tarasevich
@@ -43,10 +48,10 @@ public class AuthenticationHelper {
     private ObjectMapper objectMapper;
 
 
-    public String generateToken(final Long userId) {
+    public String generateToken(final Long userId, EnumRoles role) {
         try {
             TokenPayload payload = new TokenPayload(
-                    userId, Instant.now().getEpochSecond() + this.AUTHENTICATION_TOKEN_EXPIRATION_TIME);
+                    userId, Instant.now().getEpochSecond() + this.AUTHENTICATION_TOKEN_EXPIRATION_TIME, role);
             String token = this.objectMapper.writeValueAsString(payload);
             return JwtHelper.encode(token, new MacSigner(AUTHENTICATION_TOKEN_GENERATION_SECRET )).getEncoded();
         } catch (JsonProcessingException e) {
