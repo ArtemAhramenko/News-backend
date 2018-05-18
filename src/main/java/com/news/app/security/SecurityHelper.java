@@ -11,7 +11,6 @@ public class SecurityHelper {
         if (checkAuthenticationExists) {
             return authentication;
         }
-
         throw new RuntimeException("Authentication failed.");
     }
 }

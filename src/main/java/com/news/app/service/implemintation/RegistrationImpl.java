@@ -40,7 +40,7 @@ public class RegistrationImpl implements RegistrationService {
         newUser.setEmail(registrationRequestDto.getEmail());
         newUser.setPassword(encodePass(registrationRequestDto.getPassword()));
         newUser.setSendConfirm(false);
-        newUser.setRole(UserRole.READER);
+        newUser.setRole(UserRole.ANONYMOUS);
         newUser.setActivationCode(UUID.randomUUID().toString());
         registrationRepository.save(newUser);
         if (!StringUtils.isEmpty(newUser.getEmail())) {
@@ -105,6 +105,7 @@ public class RegistrationImpl implements RegistrationService {
 
         user.setActivationCode(null);
         user.setSendConfirm(true);
+        user.setRole(UserRole.READER);
         registrationRepository.save(user);
 
         return true;
