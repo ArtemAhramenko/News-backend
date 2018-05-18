@@ -1,9 +1,13 @@
 package com.news.app.controller;
 
 import com.news.app.entity.User;
+import com.news.app.entity.UserRole;
+import com.news.app.service.RoleService;
+import com.news.app.service.UserRoleService;
 import com.news.app.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -20,6 +24,9 @@ public class UserController {
         this.userService = userService;
     }
 
+    @Autowired
+    private UserRoleService userRoleService;
+
     @RequestMapping(path="/getuser")
     public List<User> getAllUsers(){
         return userService.getAllUsers();
@@ -29,4 +36,16 @@ public class UserController {
     public void addArticles(User user){
         userService.addUser(user);
     }
+
+    @GetMapping(path="/me")
+    public String showUser() {
+        return "auth";
+    }
+
+//    @GetMapping(path="/me")
+//    public List<UserRole> showRoles() {
+//        return userRoleService.getRoleNames();
+//    }
+
+
 }

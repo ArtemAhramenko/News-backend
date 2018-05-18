@@ -1,22 +1,17 @@
 package com.news.app.security.model;
 
+import com.news.app.entity.EnumRoles;
 import lombok.NoArgsConstructor;
 
-/**
- * @author v.tarasevich
- * @version 1.0
- * @since 07.09.2017 12:41
- */
+import java.util.Set;
+
+
 @NoArgsConstructor
 public class TokenPayload {
 
     private Long userId;
     private long expiration;
-
-    public TokenPayload(final Long userId, final long expiration) {
-        this.userId = userId;
-        this.expiration = expiration;
-    }
+    private EnumRoles role;
 
     public Long getUserId() {
         return userId;
@@ -32,5 +27,20 @@ public class TokenPayload {
 
     public void setExpiration(long expiration) {
         this.expiration = expiration;
+    }
+
+    public EnumRoles getRole() {
+        return role;
+    }
+
+    public void setRole(EnumRoles role) {
+        this.role = role;
+    }
+
+    public TokenPayload(Long userId, long expiration, EnumRoles role) {
+
+        this.userId = userId;
+        this.expiration = expiration;
+        this.role = role;
     }
 }

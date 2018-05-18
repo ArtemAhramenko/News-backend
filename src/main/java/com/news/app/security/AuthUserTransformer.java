@@ -1,9 +1,8 @@
 package com.news.app.security;
 
 
+import com.news.app.entity.EnumRoles;
 import com.news.app.entity.User;
-import com.news.app.entity.UserRole;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 /**
@@ -11,7 +10,6 @@ import org.springframework.stereotype.Component;
  * @since 22.07.2016
  */
 @Component
-@RequiredArgsConstructor
 public class AuthUserTransformer {
 
     public User makeDto(final User user) {
@@ -19,7 +17,7 @@ public class AuthUserTransformer {
 
         authUserDto.setId(user.getId());
         authUserDto.setUsername(user.getUsername());
-        authUserDto.setRole(UserRole.READER);
+        authUserDto.setRole(EnumRoles.READER);
 
         return authUserDto;
     }

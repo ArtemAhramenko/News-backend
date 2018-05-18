@@ -6,6 +6,7 @@ import javax.persistence.*;
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "User_Id")
     private Long id;
     private String username;
     private String email;
@@ -15,7 +16,7 @@ public class User {
     private String activationCode;
 
     @Enumerated(EnumType.STRING)
-    private UserRole role;
+    private EnumRoles role;
 
     public User(){
 
@@ -69,7 +70,7 @@ public class User {
         isBlocked = blocked;
     }
 
-    public UserRole getRole() {
+    public EnumRoles getRole() {
         return role;
     }
 
@@ -81,7 +82,7 @@ public class User {
         this.activationCode = activationCode;
     }
 
-    public void setRole(UserRole role) {
+    public void setRole(EnumRoles role) {
         this.role = role;
     }
 }

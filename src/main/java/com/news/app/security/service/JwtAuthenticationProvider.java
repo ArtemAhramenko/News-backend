@@ -36,6 +36,8 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
         TokenPayload tokenPayload = getAndDeserializeToken(authentication);
         validateTokenPayload(tokenPayload);
         User user = this.userRepository.findOne(tokenPayload.getUserId());
+        System.out.println(tokenPayload.getRole());
+        System.out.println(tokenPayload.getUserId());
         checkNotNull(user, "Token does not contain a user id.");
         return new JwtAuthenticationToken(checkAccountLocked(new JwtUserDetails(user)));
     }

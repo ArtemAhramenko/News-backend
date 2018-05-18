@@ -1,7 +1,7 @@
 package com.news.app.service.implemintation;
 
+import com.news.app.entity.EnumRoles;
 import com.news.app.entity.User;
-import com.news.app.entity.UserRole;
 import com.news.app.entity.dto.LoginRequestDto;
 import com.news.app.entity.dto.registration.RegistrationRequestDto;
 import com.news.app.exception.registration.EmailAlreadyExistException;
@@ -40,7 +40,7 @@ public class RegistrationImpl implements RegistrationService {
         newUser.setEmail(registrationRequestDto.getEmail());
         newUser.setPassword(encodePass(registrationRequestDto.getPassword()));
         newUser.setSendConfirm(false);
-        newUser.setRole(UserRole.ANONYMOUS);
+        newUser.setRole(EnumRoles.USER);
         newUser.setActivationCode(UUID.randomUUID().toString());
         registrationRepository.save(newUser);
         if (!StringUtils.isEmpty(newUser.getEmail())) {
@@ -89,7 +89,7 @@ public class RegistrationImpl implements RegistrationService {
         newUser.setUsername(loginRequestDto.getUsername());
         newUser.setPassword(encodePass(loginRequestDto.getPassword()));
         newUser.setSendConfirm(true);
-        newUser.setRole(UserRole.READER);
+        newUser.setRole(EnumRoles.READER);
         registrationRepository.save(newUser);
 
         return loginRequestDto;
@@ -102,10 +102,9 @@ public class RegistrationImpl implements RegistrationService {
         if (user == null) {
             return false;
         }
-
+        user.setRole(EnumRoles.READER);
         user.setActivationCode(null);
         user.setSendConfirm(true);
-        user.setRole(UserRole.READER);
         registrationRepository.save(user);
 
         return true;
