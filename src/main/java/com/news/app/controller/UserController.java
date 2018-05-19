@@ -21,9 +21,6 @@ public class UserController {
         this.userService = userService;
     }
 
-    @Autowired
-    private UserRoleService userRoleService;
-
     @RequestMapping(path="/getuser")
     public List<User> getAllUsers(){
         return userService.getAllUsers();
