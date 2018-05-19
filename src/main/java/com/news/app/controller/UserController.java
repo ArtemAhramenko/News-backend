@@ -1,9 +1,6 @@
 package com.news.app.controller;
 
 import com.news.app.entity.User;
-import com.news.app.entity.UserRole;
-import com.news.app.service.RoleService;
-import com.news.app.service.UserRoleService;
 import com.news.app.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
