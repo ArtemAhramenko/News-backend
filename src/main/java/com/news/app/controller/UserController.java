@@ -2,7 +2,9 @@ package com.news.app.controller;
 
 import com.news.app.entity.User;
 import com.news.app.service.UserService;
+import jdk.nashorn.internal.parser.JSONParser;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -31,15 +33,10 @@ public class UserController {
         userService.addUser(user);
     }
 
+    @PreAuthorize("hasAuthority('USER')")
     @GetMapping(path="/me")
     public String showUser() {
-        return "auth";
+        return JSONParser.quote("authsadsadsadsad");
     }
-
-//    @GetMapping(path="/me")
-//    public List<UserRole> showRoles() {
-//        return userRoleService.getRoleNames();
-//    }
-
 
 }

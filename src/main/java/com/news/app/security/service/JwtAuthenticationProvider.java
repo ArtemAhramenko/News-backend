@@ -1,78 +1,70 @@
 package com.news.app.security.service;
 
 import com.news.app.entity.User;
-import com.news.app.exception.auth.JwtAccountLockedException;
 import com.news.app.repository.UserRepository;
 import com.news.app.security.exception.ExpiredTokenAuthenticationException;
 import com.news.app.security.exception.InvalidTokenAuthenticationException;
 import com.news.app.security.model.JwtAuthenticationToken;
 import com.news.app.security.model.JwtUserDetails;
 import com.news.app.security.model.TokenPayload;
-import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Component;
 
 import java.util.Objects;
 
-/**
- * @author v.tarasevich
- * @version 1.0
- * @since 07.09.2017 17:58
- */
 @Component
-@RequiredArgsConstructor
 public class JwtAuthenticationProvider implements AuthenticationProvider {
 
-    private static final long MILLS_IN_SECOND = 1000L;
+    private static final long MILLIS_IN_SECOND = 1000L;
 
-    private UserRepository userRepository;
-    private AuthenticationHelper authenticationHelper;
+    private final UserRepository userRepository;
+    private final AuthenticationHelper authenticationHelper;
+
+    public JwtAuthenticationProvider(UserRepository userRepository, AuthenticationHelper authenticationHelper) {
+        this.userRepository = userRepository;
+        this.authenticationHelper = authenticationHelper;
+    }
 
     @Override
-    public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-        TokenPayload tokenPayload = getAndDeserializeToken(authentication);
-        validateTokenPayload(tokenPayload);
-        User user = this.userRepository.findOne(tokenPayload.getUserId());
-        System.out.println(tokenPayload.getRole());
-        System.out.println(tokenPayload.getUserId());
-        checkNotNull(user, "Token does not contain a user id.");
-        return new JwtAuthenticationToken(checkAccountLocked(new JwtUserDetails(user)));
-    }
+    public Authentication authenticate(final Authentication authRequest) {
+        // Getting string token from authentication request object
+        String token = StringUtils.trimToNull((String) authRequest.getCredentials());
 
-    private TokenPayload getAndDeserializeToken(Authentication authentication) {
-        String token = StringUtils.trimToNull((String) authentication.getCredentials());
-        return authenticationHelper.decodeToken(token);
-    }
+        //  Deserialize token
+        TokenPayload tokenPayload = authenticationHelper.decodeToken(token);
 
-    private void validateTokenPayload(TokenPayload tokenPayload) {
-        checkIsExpired(tokenPayload.getExpiration());
-        checkNotNull(tokenPayload.getUserId(), "Token does not contain a user id.");
-    }
+        // Checking if token already expired and throwing an AuthenticationException in this case
+        checkIsExpired(tokenPayload.getExp());
 
-    private JwtUserDetails checkAccountLocked(JwtUserDetails userDetails) {
-        if (!userDetails.isAccountNonLocked()) {
-            throw new JwtAccountLockedException("This account are blocked.");
+        // Getting user id from token
+        Long userEntityId = tokenPayload.getUserId();
+        if (Objects.isNull(userEntityId)) {
+            throw new InvalidTokenAuthenticationException("Token does not contain a user id.");
         }
-        return userDetails;
-    }
 
-    private void checkNotNull(Object value, String badCauseMessage) {
-        if (Objects.isNull(value)) {
-            throw new InvalidTokenAuthenticationException(badCauseMessage);
+        // Getting user from database
+        User userInformation = userRepository.findOne(userEntityId);
+
+        if (Objects.isNull(userInformation)) {
+            throw new InvalidTokenAuthenticationException("Token does not contain existed user id.");
         }
+
+
+        // Return authenticated Authentication
+        JwtUserDetails userDetails = new JwtUserDetails(userInformation);
+        return new JwtAuthenticationToken(userDetails);
     }
 
     private void checkIsExpired(final Long tokenExpirationTime) {
-        if (System.currentTimeMillis() / MILLS_IN_SECOND > tokenExpirationTime) {
+        if ((System.currentTimeMillis() / MILLIS_IN_SECOND) > tokenExpirationTime) {
             throw new ExpiredTokenAuthenticationException();
         }
     }
 
     @Override
-    public boolean supports(Class<?> authentication) {
+    public boolean supports(final Class<?> authentication) {
         return JwtAuthenticationToken.class.isAssignableFrom(authentication);
     }
 }

@@ -1,28 +1,74 @@
 package com.news.app.entity;
 
+import org.hibernate.validator.constraints.URL;
+
 import javax.persistence.*;
+import java.util.Set;
 
 @Entity
+@Table(name = "users")
 public class User {
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "User_Id")
     private Long id;
+
+    @Column(name = "username")
     private String username;
+
+    @Column(name = "email")
     private String email;
+
+    @Column(name = "password")
     private String password;
-    private Boolean isSendConfirm;
-    private Boolean isBlocked;
-    private String activationCode;
 
-    @Enumerated(EnumType.STRING)
-    private EnumRoles role;
+    @Column(name = "first_name")
+    private String firstName;
 
-    public User(){
+    @Column(name = "last_name")
+    private String lastName;
+
+    @Column(name = "confirmation_token")
+    private String confirmationToken;
+
+    @Column(name = "banned")
+    private boolean banned;
+
+    @Column(name = "enabled")
+    private boolean enabled;
+
+    @URL
+    @Column(name = "profile_img")
+    private String profileImg;
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "user_roles",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id"))
+    private Set<Role> roles;
+
+    public User(String username, String email, String password, String firstName, String lastName, String confirmationToken, boolean banned, boolean enabled, String profileImg, Set<Role> roles) {
+        this.username = username;
+        this.email = email;
+        this.password = password;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.confirmationToken = confirmationToken;
+        this.banned = banned;
+        this.enabled = enabled;
+        this.profileImg = profileImg;
+        this.roles = roles;
+    }
+
+
+
+    public User() {
 
     }
 
+
     public Long getId() {
+
         return id;
     }
 
@@ -54,35 +100,59 @@ public class User {
         this.password = password;
     }
 
-    public Boolean getSendConfirm() {
-        return isSendConfirm;
+    public String getFirstName() {
+        return firstName;
     }
 
-    public void setSendConfirm(Boolean sendConfirm) {
-        isSendConfirm = sendConfirm;
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
     }
 
-    public Boolean getBlocked() {
-        return isBlocked;
+    public String getLastName() {
+        return lastName;
     }
 
-    public void setBlocked(Boolean blocked) {
-        isBlocked = blocked;
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 
-    public EnumRoles getRole() {
-        return role;
+    public String getConfirmationToken() {
+        return confirmationToken;
     }
 
-    public String getActivationCode() {
-        return activationCode;
+    public void setConfirmationToken(String confirmationToken) {
+        this.confirmationToken = confirmationToken;
     }
 
-    public void setActivationCode(String activationCode) {
-        this.activationCode = activationCode;
+    public boolean isBanned() {
+        return banned;
     }
 
-    public void setRole(EnumRoles role) {
-        this.role = role;
+    public void setBanned(boolean banned) {
+        this.banned = banned;
+    }
+
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
+
+    public String getProfileImg() {
+        return profileImg;
+    }
+
+    public void setProfileImg(String profileImg) {
+        this.profileImg = profileImg;
+    }
+
+    public Set<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
     }
 }

@@ -1,6 +1,7 @@
 package com.news.app.service.implemintation;
 
 import com.news.app.entity.EnumRoles;
+import com.news.app.entity.Role;
 import com.news.app.entity.User;
 import com.news.app.entity.dto.LoginRequestDto;
 import com.news.app.entity.dto.registration.RegistrationRequestDto;
@@ -9,11 +10,14 @@ import com.news.app.exception.registration.UsernameAlreadyExistException;
 import com.news.app.repository.RegistrationRepository;
 import com.news.app.repository.UserRepository;
 import com.news.app.service.RegistrationService;
+import com.news.app.service.RoleService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 @Service
@@ -24,6 +28,9 @@ public class RegistrationImpl implements RegistrationService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    RoleService roleService;
 
     private final RegistrationRepository registrationRepository;
 
@@ -39,16 +46,18 @@ public class RegistrationImpl implements RegistrationService {
         newUser.setUsername(registrationRequestDto.getUsername());
         newUser.setEmail(registrationRequestDto.getEmail());
         newUser.setPassword(encodePass(registrationRequestDto.getPassword()));
-        newUser.setSendConfirm(false);
-        newUser.setRole(EnumRoles.USER);
-        newUser.setActivationCode(UUID.randomUUID().toString());
+        newUser.setEnabled(false);
+        Set<Role> roles = new HashSet<>();
+        roles.add(roleService.findByName("USER"));
+        newUser.setRoles(roles);
+        newUser.setConfirmationToken(UUID.randomUUID().toString());
         registrationRepository.save(newUser);
         if (!StringUtils.isEmpty(newUser.getEmail())) {
                 String message = String.format(
                         "Hello, %s.\n" +
                                 "Welcome to NewsSite. To confirm your registration visit next link: http://localhost:8080/activate/%s",
                         newUser.getUsername(),
-                        newUser.getActivationCode()
+                        newUser.getConfirmationToken()
                 );
                 mailSender.sendMail(newUser.getEmail(), "Confirm registration", message);
         }
@@ -88,8 +97,11 @@ public class RegistrationImpl implements RegistrationService {
         User newUser = new User();
         newUser.setUsername(loginRequestDto.getUsername());
         newUser.setPassword(encodePass(loginRequestDto.getPassword()));
-        newUser.setSendConfirm(true);
-        newUser.setRole(EnumRoles.READER);
+        newUser.setEnabled(true);
+        Set<Role> roles = new HashSet<>();
+        roles.add(roleService.findByName("USER"));
+        newUser.setRoles(roles);
+        newUser.setConfirmationToken(UUID.randomUUID().toString());
         registrationRepository.save(newUser);
 
         return loginRequestDto;
@@ -97,14 +109,16 @@ public class RegistrationImpl implements RegistrationService {
 
     @Override
     public boolean activateUser(String code) {
-        User user = registrationRepository.findByActivationCode(code);
+        User user = registrationRepository.findByConfirmationToken(code);
 
         if (user == null) {
             return false;
         }
-        user.setRole(EnumRoles.READER);
-        user.setActivationCode(null);
-        user.setSendConfirm(true);
+        Set<Role> roles = new HashSet<>();
+        roles.add(roleService.findByName("USER"));
+        user.setRoles(roles);
+        user.setConfirmationToken(null);
+        user.setEnabled(true);
         registrationRepository.save(user);
 
         return true;
