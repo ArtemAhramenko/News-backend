@@ -1,6 +1,9 @@
 package com.news.app.entity;
 
+import org.hibernate.validator.constraints.URL;
+
 import javax.persistence.*;
+import java.util.Set;
 
 @Entity
 public class User {

@@ -28,12 +28,6 @@ public class ArticleController {
     }
 
     @RequestMapping(path = "/getarticleid/{id}")
-    public Optional<Articles> getArticleId(@PathVariable Long id){
-        Optional<Articles> ar = articlesService.getArticleId(id);
-        return ar;
-    }
-
-    @RequestMapping(path = "/getarticleid/{id}")
     public Articles getArticleById(@PathVariable Long id){
         return articlesService.getArticleById(id);
     }

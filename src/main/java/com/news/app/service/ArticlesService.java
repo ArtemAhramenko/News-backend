@@ -9,8 +9,7 @@ public interface ArticlesService {
 
     List<Articles> getAllArticles();
 
-    Optional<Articles> getArticleId (Long id);
-
     void addArticle(Articles article);
+
     Articles getArticleById(Long id);
 }

@@ -22,12 +22,13 @@ public class ArticlesImpl implements ArticlesService {
         return articles;
     }
 
-    public Optional<Articles> getArticleId(Long id) {
-        return articlesRepository.findById(id);
-    }
-
     public void addArticle(Articles article){
         articlesRepository.save(article);
+    }
+
+    @Override
+    public Articles getArticleById(Long id) {
+        return articlesRepository.findById(id);
     }
 
 }
