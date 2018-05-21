@@ -7,9 +7,10 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface RegistrationRepository extends CrudRepository<User, Long> {
-    User findByActivationCode(String code);
 
     RegistrationRequestDto findByUsername(String username);
 
     RegistrationRequestDto findByEmail(String email);
+
+    User findByConfirmationToken(String code);
 }

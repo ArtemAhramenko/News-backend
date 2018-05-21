@@ -1,6 +1,5 @@
 package com.news.app.controller;
 
-import com.news.app.entity.User;
 import com.news.app.entity.dto.ErrorInfoDto;
 import com.news.app.entity.dto.LoginRequestDto;
 import com.news.app.entity.dto.LoginResponseDto;
@@ -8,11 +7,13 @@ import com.news.app.exception.auth.AuthenticationFailedException;
 import com.news.app.exception.auth.UserNotFoundException;
 import com.news.app.exception.registration.UnconfirmedUserException;
 
-import com.news.app.security.service.AuthenticationService;
+
+import com.news.app.security.service.AuthenticationServiceImpl;
+
+import com.news.app.security.ulogin.UloginAuthentication;
 import com.news.app.security.ulogin.UloginParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,15 +24,16 @@ import javax.servlet.http.HttpServletRequest;
 public class AuthenticationController {
 
     @Autowired
-    AuthenticationService authenticationService;
+    AuthenticationServiceImpl authenticationService;
 
     @Autowired
-    UloginParser uloginParser;
+    UloginAuthentication uloginAuthentication;
 
     @PostMapping("/socialAuth")
     private LoginResponseDto addSocailUser(@RequestBody String token) {
-        LoginRequestDto loginRequestDto = uloginParser.getUser(token);
+        LoginRequestDto loginRequestDto = uloginAuthentication.attemptAuthentication(token);
         System.out.println(loginRequestDto.getUsername());
+        System.out.println(loginRequestDto.getPassword());
         return authenticationService.login(loginRequestDto);
     }
 

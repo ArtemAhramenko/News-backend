@@ -2,88 +2,85 @@ package com.news.app.security.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import com.news.app.security.exception.InvalidTokenAuthenticationException;
+import com.news.app.security.model.JwtUserDetails;
 import com.news.app.security.model.TokenPayload;
-import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.jwt.Jwt;
 import org.springframework.security.jwt.JwtHelper;
 import org.springframework.security.jwt.crypto.sign.MacSigner;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
 import java.io.IOException;
 import java.time.Instant;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
-/**
- * @author v.tarasevich
- * @version 1.0
- * @since 07.09.2017 13:03
- */
+
 @Component
-@RequiredArgsConstructor
 public class AuthenticationHelper {
 
-    private final static Logger logger = LoggerFactory.getLogger(AuthenticationHelper.class);
+    public static final String AUTHENTICATION_HEADER = "Authorization";
+    public static final String AUTHENTICATION_PARAM = "auth";
+    private final ObjectMapper objectMapper;
+    private String SECRET = "changeMe";
+    private Long tokenExpirationTime = 3600L;
 
-    public static final String AUTHENTICATION_TOKEN_HEADER = "Authentication";
-
-    private static final Long AUTHENTICATION_TOKEN_EXPIRATION_TIME = 3600L;
-    private static final String AUTHENTICATION_TOKEN_GENERATION_SECRET = "changeMe";
-
-    @Resource
-    private Environment environment;
-
-    @Autowired
-    private ObjectMapper objectMapper;
-
+    public AuthenticationHelper(ObjectMapper objectMapper) {
+        this.objectMapper = objectMapper;
+    }
 
     public String generateToken(final Long userId) {
         try {
             TokenPayload payload = new TokenPayload(
-                    userId, Instant.now().getEpochSecond() + this.AUTHENTICATION_TOKEN_EXPIRATION_TIME);
+                    userId, Instant.now().getEpochSecond() + this.tokenExpirationTime);
             String token = this.objectMapper.writeValueAsString(payload);
-            return JwtHelper.encode(token, new MacSigner(AUTHENTICATION_TOKEN_GENERATION_SECRET )).getEncoded();
-        } catch (JsonProcessingException e) {
-            logger.error(String.format("Error generating token.\n%s", e));
-            throw new InternalAuthenticationServiceException("Error generating token.", e);
+            return JwtHelper.encode(token, new MacSigner(SECRET)).getEncoded();
+        } catch (JsonProcessingException exception) {
+            throw new InternalAuthenticationServiceException("Error generating token.", exception);
+        }
+    }
+
+    public String generateToken(final JwtUserDetails userDetails) {
+
+        Set<String> roles = new HashSet<>();
+        userDetails.getAuthorities().forEach(grantedAuthority -> roles.add(grantedAuthority.toString()));
+
+        try {
+            TokenPayload payload = new TokenPayload(userDetails.getId(),
+                    Instant.now().getEpochSecond() + this.tokenExpirationTime,
+                    roles);
+
+            String token = this.objectMapper.writeValueAsString(payload);
+            return JwtHelper.encode(token, new MacSigner(SECRET)).getEncoded();
+        } catch (JsonProcessingException exception) {
+            throw new InternalAuthenticationServiceException("Error generating token.", exception);
         }
     }
 
     public TokenPayload decodeToken(final String token) {
-        checkNotNullToken(token);
-        Jwt jwt = JwtHelper.decode(token);
-        JwtVerification(jwt);
-        return getPayload(jwt);
-    }
-
-    private void checkNotNullToken(final String token) throws InvalidTokenAuthenticationException {
         if (Objects.isNull(token)) {
-            logger.error("Token is null or blank.");
-            throw new InvalidTokenAuthenticationException("Token is null or blank.");
+            throw new InvalidTokenAuthenticationException("Token was null or blank.");
         }
-    }
+        // Getting JWT object from string token
+        Jwt jwt = JwtHelper.decode(token);
 
-    private void JwtVerification(Jwt jwt) throws InvalidTokenAuthenticationException {
+        // Validate token signature (to be sure that token has not been tampered with)
         try {
-            jwt.verifySignature(new MacSigner(environment.getProperty(AUTHENTICATION_TOKEN_GENERATION_SECRET)));
-        } catch (Exception e) {
-            logger.error("Token signature verification failure.");
-            throw new InvalidTokenAuthenticationException("Token signature verification failure.", e);
+            jwt.verifySignature(new MacSigner(SECRET));
+        } catch (Exception exception) {
+            throw new InvalidTokenAuthenticationException("Token signature verification failed.", exception);
         }
-    }
 
-    private TokenPayload getPayload(Jwt jwt) throws InvalidTokenAuthenticationException {
+        // Getting payload of token
+        String claims = jwt.getClaims();
         try {
-            return this.objectMapper.readValue(jwt.getClaims(), TokenPayload.class);
-        } catch (IOException e) {
-            throw new InvalidTokenAuthenticationException("Token parsing failed.", e);
+            return this.objectMapper.readValue(claims, TokenPayload.class);
+        } catch (IOException exception) {
+            throw new InvalidTokenAuthenticationException("Token parsing failed.", exception);
         }
-    }
 
+    }
 }

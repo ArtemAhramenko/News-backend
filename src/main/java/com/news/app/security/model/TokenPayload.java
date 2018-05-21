@@ -1,21 +1,33 @@
 package com.news.app.security.model;
 
-import lombok.NoArgsConstructor;
+import java.util.Set;
 
-/**
- * @author v.tarasevich
- * @version 1.0
- * @since 07.09.2017 12:41
- */
-@NoArgsConstructor
 public class TokenPayload {
-
     private Long userId;
-    private long expiration;
+    private long exp;
+    private Set<String> roles;
 
-    public TokenPayload(final Long userId, final long expiration) {
+    public TokenPayload() {
+    }
+
+    public TokenPayload(final Long userId, final long exp) {
         this.userId = userId;
-        this.expiration = expiration;
+        this.exp = exp;
+    }
+
+    public TokenPayload(Long userId, long exp, Set<String> roles) {
+        this.userId = userId;
+        this.exp = exp;
+
+        this.roles = roles;
+    }
+
+    public Set<String> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<String> roles) {
+        this.roles = roles;
     }
 
     public Long getUserId() {
@@ -26,11 +38,11 @@ public class TokenPayload {
         this.userId = userId;
     }
 
-    public long getExpiration() {
-        return expiration;
+    public long getExp() {
+        return exp;
     }
 
-    public void setExpiration(long expiration) {
-        this.expiration = expiration;
+    public void setExp(long exp) {
+        this.exp = exp;
     }
 }

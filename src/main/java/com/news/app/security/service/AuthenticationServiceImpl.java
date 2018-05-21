@@ -4,10 +4,9 @@ import com.news.app.entity.User;
 import com.news.app.entity.dto.LoginRequestDto;
 import com.news.app.entity.dto.LoginResponseDto;
 import com.news.app.repository.UserRepository;
-import com.news.app.security.AuthUserTransformer;
 import com.news.app.security.SecurityHelper;
 import com.news.app.security.model.JwtUserDetails;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -15,26 +14,21 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.json.JsonException;
+
 import java.util.Objects;
 import java.util.Optional;
 
-/**
- * @author ikatlinsky
- * @since 5/12/17
- */
 @Service
 @Transactional
-public class AuthenticationService {
+public class AuthenticationServiceImpl {
 
     private final UserRepository userRepository;
-    private final AuthUserTransformer authUserTransformer;
     private final AuthenticationHelper authenticationHelper;
     private final AuthenticationManager authenticationManager;
 
-    public AuthenticationService(UserRepository userRepository, AuthUserTransformer authUserTransformer, AuthenticationHelper authenticationHelper, AuthenticationManager authenticationManager) {
+    @Autowired
+    public AuthenticationServiceImpl(UserRepository userRepository, AuthenticationHelper authenticationHelper, AuthenticationManager authenticationManager) {
         this.userRepository = userRepository;
-        this.authUserTransformer = authUserTransformer;
         this.authenticationHelper = authenticationHelper;
         this.authenticationManager = authenticationManager;
     }
@@ -43,10 +37,8 @@ public class AuthenticationService {
         try {
             String username = Optional.ofNullable(loginRequestDto.getUsername())
                     .orElseThrow(() -> new BadCredentialsException("Username should be passed."));
-
             String password = Optional.ofNullable(loginRequestDto.getPassword())
                     .orElseThrow(() -> new BadCredentialsException("Password should be passed."));
-
             UsernamePasswordAuthenticationToken authRequest = new UsernamePasswordAuthenticationToken(username,
                     password);
 
@@ -56,33 +48,40 @@ public class AuthenticationService {
             // Set generated JWT token to response header
             if (authResult.isAuthenticated()) {
                 JwtUserDetails userDetails = (JwtUserDetails) authResult.getPrincipal();
-
                 User user = userRepository.findOne(userDetails.getId());
                 if (Objects.isNull(user)) {
-                    throw new JsonException("User not exist in system.");
+                    throw new RuntimeException("User not exist in system.");
                 }
 
-                String token = this.authenticationHelper.generateToken(userDetails.getId());
+                if(user.isBanned()){
+                    throw new RuntimeException("User is banned");
+                }
 
+                if(!user.isEnabled()){
+                    throw new RuntimeException("Confirm email pls");
+                }
+
+                String token = this.authenticationHelper.generateToken(userDetails);
                 return new LoginResponseDto(token);
             } else {
-                throw new JsonException("Authentication failed.");
+                throw new RuntimeException("Authentication failed.");
             }
 
         } catch (BadCredentialsException exception) {
-            throw new JsonException("Username or password was incorrect. Please try again.", exception);
+            throw new RuntimeException("Username or password was incorrect. Please try again.", exception);
         }
     }
 
-    /**
-     * Get user info.
-     * @return user info.
-     */
     @Transactional(readOnly = true)
     public User getMe() {
         Authentication authentication = SecurityHelper.getAuthenticationWithCheck();
-        User byUsername = userRepository.findByUsername(authentication.getName());
+        return userRepository.findByUsername(authentication.getName());
+    }
 
-        return authUserTransformer.makeDto(byUsername);
+    @Transactional(readOnly = true)
+    public Long getMyId() {
+        Authentication authentication = SecurityHelper.getAuthenticationWithCheck();
+        User byUsername = userRepository.findByUsername(authentication.getName());
+        return byUsername.getId();
     }
 }

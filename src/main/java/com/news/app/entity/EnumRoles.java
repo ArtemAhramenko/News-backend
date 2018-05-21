@@ -1,7 +1,7 @@
 package com.news.app.entity;
 
-public enum UserRole {
-    ANONYMOUS,
+public enum EnumRoles {
+    USER,
     READER,
     WRITER,
     ADMIN

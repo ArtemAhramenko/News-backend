@@ -15,13 +15,9 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Objects;
 import java.util.Optional;
 
-/**
- * @author v.tarasevich
- * @version 1.0
- * @since 07.09.2017 16:08
- */
 public class JwtAuthenticationFilter extends AbstractAuthenticationProcessingFilter {
 
     public JwtAuthenticationFilter(final AuthenticationManager authenticationManager) {
@@ -31,33 +27,41 @@ public class JwtAuthenticationFilter extends AbstractAuthenticationProcessingFil
     }
 
     @Override
-    public Authentication attemptAuthentication(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws AuthenticationException, IOException, ServletException {
+    public Authentication attemptAuthentication(final HttpServletRequest request, final HttpServletResponse response)
+            throws IOException, ServletException {
         try {
-            String token = getToken(httpServletRequest);
-            if(token == null) {
-                throw new BadCredentialsException("Token not found in request`s header.");
+            // Getting JWT token from request
+            String token = Optional.ofNullable(request.getHeader(AuthenticationHelper.AUTHENTICATION_HEADER))
+                    .map(header -> header.substring(7)).orElse(null);
+
+            if (Objects.isNull(token)) {
+                throw new BadCredentialsException("Token not found in request's header.");
             }
-            JwtAuthenticationToken jwtAuthenticationToken = new JwtAuthenticationToken(token);
-            return this.getAuthenticationManager().authenticate(jwtAuthenticationToken);
+
+            // Create token for authentication provider
+            JwtAuthenticationToken authRequest = new JwtAuthenticationToken(token);
+
+            // Return a fully authenticated object
+            return this.getAuthenticationManager().authenticate(authRequest);
         } catch (AuthenticationException exception) {
-            unsuccessfulAuthentication(httpServletRequest, httpServletResponse, exception);
+            // Go to 401 error page if exception thrown
+            unsuccessfulAuthentication(request, response, exception);
         }
         return null;
     }
 
     @Override
-    protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response,
-                                            FilterChain chain, Authentication authResult)
+    protected void successfulAuthentication(final HttpServletRequest request, final HttpServletResponse response,
+                                            final FilterChain chain, final Authentication authResult)
             throws IOException, ServletException {
+        // Set authentication to context
         SecurityContextHolder.getContext().setAuthentication(authResult);
+
+        // Fire event
         if (this.eventPublisher != null) {
             this.eventPublisher.publishEvent(new InteractiveAuthenticationSuccessEvent(authResult, this.getClass()));
         }
-        chain.doFilter(request, response);
-    }
 
-    private String getToken(HttpServletRequest request) {
-        String authenticationHeaderName = AuthenticationHelper.AUTHENTICATION_TOKEN_HEADER;
-        return Optional.ofNullable(request.getHeader(authenticationHeaderName)).orElse(null);
+        chain.doFilter(request, response);
     }
 }

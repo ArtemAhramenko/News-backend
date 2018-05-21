@@ -8,11 +8,6 @@ import java.io.Serializable;
 import java.util.Collection;
 import java.util.Objects;
 
-/**
- * @author v.tarasevich
- * @version 1.0
- * @since 07.09.2017 12:29
- */
 public class JwtAuthenticationToken implements Authentication {
 
     private final JwtUserDetails userDetails;
@@ -27,11 +22,16 @@ public class JwtAuthenticationToken implements Authentication {
         this.grantedAuthorities = null;
     }
 
-    public JwtAuthenticationToken(JwtUserDetails userDetails) {
+    public JwtAuthenticationToken(final JwtUserDetails userDetails) {
         this.credentials = null;
         this.userDetails = userDetails;
         this.grantedAuthorities = ImmutableSet.copyOf(userDetails.getAuthorities());
         this.isAuthenticated = true;
+    }
+
+    @Override
+    public String getName() {
+        return Objects.isNull(this.userDetails) ? null : this.userDetails.getUsername();
     }
 
     @Override
@@ -40,7 +40,7 @@ public class JwtAuthenticationToken implements Authentication {
     }
 
     @Override
-    public Object getCredentials() {
+    public Serializable getCredentials() {
         return this.credentials;
     }
 
@@ -60,15 +60,10 @@ public class JwtAuthenticationToken implements Authentication {
     }
 
     @Override
-    public void setAuthenticated(final boolean isAuthenticated) throws IllegalArgumentException {
-        if(isAuthenticated) {
+    public void setAuthenticated(final boolean isAuthenticated) {
+        if (isAuthenticated) {
             throw new IllegalArgumentException("Once created you cannot set this token to authenticated.");
         }
         this.isAuthenticated = false;
-    }
-
-    @Override
-    public String getName() {
-        return Objects.isNull(this.userDetails) ? null : userDetails.getUsername();
     }
 }
