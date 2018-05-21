@@ -13,12 +13,16 @@ import java.util.Optional;
 @Service
 public class ArticlesImpl implements ArticlesService {
 
+    private final ArticlesRepository articlesRepository;
+
     @Autowired
-    private ArticlesRepository articlesRepository;
+    public ArticlesImpl(ArticlesRepository articlesRepository) {
+        this.articlesRepository = articlesRepository;
+    }
 
     public List<Articles> getAllArticles(){
         List<Articles> articles = new ArrayList<>();
-        articlesRepository.findAll().forEach(articles :: add);
+        articles.addAll(articlesRepository.findAll());
         return articles;
     }
 
@@ -26,9 +30,5 @@ public class ArticlesImpl implements ArticlesService {
         articlesRepository.save(article);
     }
 
-    @Override
-    public Articles getArticleById(Long id) {
-        return articlesRepository.findById(id);
-    }
-
+    public Articles getArticleById(Long id) { return articlesRepository.findOne(id); }
 }
