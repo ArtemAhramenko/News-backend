@@ -6,9 +6,7 @@ import javax.persistence.*;
 import java.util.Set;
 
 @Entity
-@Table(name = "users")
 public class User {
-
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -32,8 +30,8 @@ public class User {
     private boolean enabled;
 
     @URL
-    @Column(name = "profile_img")
-    private String profileImg;
+    @Column(name = "profileImg")
+    private String profileImg = "http://res.cloudinary.com/profunding/image/upload/v1505580510/default-user-image.jpg";
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "user_roles",

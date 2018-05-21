@@ -11,12 +11,8 @@ import java.util.Optional;
 @RestController
 @CrossOrigin(origins = "http://localhost:4200")
 public class ArticleController {
-    private final ArticlesService articlesService;
-
     @Autowired
-    public ArticleController(ArticlesService articlesService) {
-        this.articlesService = articlesService;
-    }
+    private ArticlesService articlesService;
 
     @RequestMapping(path="/getarticle")
     public List<Articles> getAllArticles(){
@@ -30,7 +26,6 @@ public class ArticleController {
 
     @RequestMapping(method = RequestMethod.POST, path = "/getarticleid/{id}")
     public Articles getArticleId(@PathVariable Long id){
-        Articles article = articlesService.getArticleId(id);
-        return article;
+        return articlesService.getArticleById(id);
     }
 }

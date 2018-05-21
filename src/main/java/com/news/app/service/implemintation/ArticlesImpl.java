@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,17 +22,12 @@ public class ArticlesImpl implements ArticlesService {
     }
 
     public List<Articles> getAllArticles(){
-        List<Articles> articles = new ArrayList<>();
-        articles.addAll(articlesRepository.findAll());
-        return articles;
+        return new ArrayList<>((Collection<? extends Articles>) articlesRepository.findAll());
     }
 
     public void addArticle(Articles article){
         articlesRepository.save(article);
     }
 
-    public Articles getArticleId(Long id) {
-        Articles art = articlesRepository.findOne(id);
-        return art;
-    }
+    public Articles getArticleById(Long id) { return articlesRepository.findOne(id); }
 }

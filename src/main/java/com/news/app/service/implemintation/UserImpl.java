@@ -1,6 +1,7 @@
 package com.news.app.service.implemintation;
 
 import com.news.app.entity.User;
+import com.news.app.entity.dto.UserChangeParamsDto;
 import com.news.app.repository.UserRepository;
 import com.news.app.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +39,21 @@ public class UserImpl implements UserService {
     public User getByUsername(String username) {
         return userRepository.getByUsername(username);
     }
+
+    @Override
+    public UserChangeParamsDto getUserById(Long id) {
+        User user = userRepository.findOne(id);
+        UserChangeParamsDto userChangeParamsDto = new UserChangeParamsDto();
+        return makeDto(user, userChangeParamsDto);
+    }
+
+    private UserChangeParamsDto makeDto(User user, UserChangeParamsDto userChangeParamsDto) {
+        userChangeParamsDto.setPassword(user.getPassword());
+        userChangeParamsDto.setProfileImg(user.getProfileImg());
+        userChangeParamsDto.setUsername(user.getUsername());
+        return userChangeParamsDto;
+    }
+
 
 
 }

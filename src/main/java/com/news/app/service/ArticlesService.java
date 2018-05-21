@@ -8,5 +8,5 @@ import java.util.Optional;
 public interface ArticlesService {
     List<Articles> getAllArticles();
     void addArticle(Articles article);
-    Articles getArticleId(Long id);
+    Articles getArticleById(Long id);
 }

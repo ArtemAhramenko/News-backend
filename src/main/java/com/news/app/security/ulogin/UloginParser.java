@@ -42,7 +42,6 @@ public class UloginParser {
             uLoginUser.setPassword(getStringProp(obj, "identity"));
             System.out.println("Q" + getStringProp(obj, "identity") + "Q");
 
-            /*uLoginUser.setEnabled(true);*/
 
         } catch (Exception ex) {
             System.out.println(ex);
