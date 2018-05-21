@@ -1,33 +1,42 @@
 package com.news.app.entity;
 
+import org.springframework.security.core.GrantedAuthority;
+
 import javax.persistence.*;
+import java.util.Set;
 
 @Entity
-public class Role {
+@Table (name = "roles")
+public class Role implements GrantedAuthority {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "Role_Id", nullable = false)
-    private Long roleId;
+    private Long id;
+    private String name;
 
-    @Column(name = "Role_Name", length = 30, nullable = false)
-    private String roleName;
-
-    public Long getRoleId() {
-        return roleId;
+    @Override
+    public String toString() {
+        return name;
     }
 
-    public void setRoleId(Long roleId) {
-        this.roleId = roleId;
+    @Override
+    public String getAuthority() {
+        return getName();
     }
 
-    public String getRoleName() {
-        return roleName;
+    public Long getId() {
+        return id;
     }
 
-    public void setRoleName(String roleName) {
-        this.roleName = roleName;
+    public void setId(Long id) {
+        this.id = id;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 }
-
