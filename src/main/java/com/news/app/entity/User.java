@@ -22,12 +22,6 @@ public class User {
     @Column(name = "password")
     private String password;
 
-    @Column(name = "first_name")
-    private String firstName;
-
-    @Column(name = "last_name")
-    private String lastName;
-
     @Column(name = "confirmation_token")
     private String confirmationToken;
 
@@ -51,8 +45,6 @@ public class User {
         this.username = username;
         this.email = email;
         this.password = password;
-        this.firstName = firstName;
-        this.lastName = lastName;
         this.confirmationToken = confirmationToken;
         this.banned = banned;
         this.enabled = enabled;
@@ -60,15 +52,11 @@ public class User {
         this.roles = roles;
     }
 
-
-
     public User() {
 
     }
 
-
     public Long getId() {
-
         return id;
     }
 
@@ -98,22 +86,6 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
     }
 
     public String getConfirmationToken() {

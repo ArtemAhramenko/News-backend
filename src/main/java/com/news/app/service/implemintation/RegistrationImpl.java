@@ -48,7 +48,7 @@ public class RegistrationImpl implements RegistrationService {
         newUser.setPassword(encodePass(registrationRequestDto.getPassword()));
         newUser.setEnabled(false);
         Set<Role> roles = new HashSet<>();
-        roles.add(roleService.findByName("USER"));
+        roles.add(roleService.findByName("READER"));
         newUser.setRoles(roles);
         newUser.setConfirmationToken(UUID.randomUUID().toString());
         registrationRepository.save(newUser);
@@ -99,7 +99,7 @@ public class RegistrationImpl implements RegistrationService {
         newUser.setPassword(encodePass(loginRequestDto.getPassword()));
         newUser.setEnabled(true);
         Set<Role> roles = new HashSet<>();
-        roles.add(roleService.findByName("USER"));
+        roles.add(roleService.findByName("READER"));
         newUser.setRoles(roles);
         newUser.setConfirmationToken(UUID.randomUUID().toString());
         registrationRepository.save(newUser);
@@ -115,7 +115,7 @@ public class RegistrationImpl implements RegistrationService {
             return false;
         }
         Set<Role> roles = new HashSet<>();
-        roles.add(roleService.findByName("USER"));
+        roles.add(roleService.findByName("READER"));
         user.setRoles(roles);
         user.setConfirmationToken(null);
         user.setEnabled(true);
