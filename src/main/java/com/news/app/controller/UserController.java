@@ -33,7 +33,7 @@ public class UserController {
         userService.addUser(user);
     }
 
-    @PreAuthorize("hasAuthority('USER')")
+    @PreAuthorize("hasAuthority('READER')")
     @GetMapping(path="/me")
     public String showUser() {
         return JSONParser.quote("authsadsadsadsad");
