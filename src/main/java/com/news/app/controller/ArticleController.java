@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@CrossOrigin
+@CrossOrigin(origins = "http://localhost:4200")
 public class ArticleController {
     @Autowired
     private ArticlesService articlesService;
@@ -31,5 +31,10 @@ public class ArticleController {
     public Optional<Articles> getArticleId(@PathVariable Long id){
         Optional<Articles> ar = articlesService.getArticleId(id);
         return ar;
+    }
+
+    @RequestMapping(path = "/getarticleid/{id}")
+    public Articles getArticleById(@PathVariable Long id){
+        return articlesService.getArticleById(id);
     }
 }

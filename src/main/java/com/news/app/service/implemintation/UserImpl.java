@@ -12,8 +12,12 @@ import java.util.List;
 @Service
 public class UserImpl implements UserService {
 
+    private final UserRepository userRepository;
+
     @Autowired
-    private UserRepository userRepository;
+    public UserImpl(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     public List<User> getAllUsers(){
         List<User> users = new ArrayList<>();
@@ -24,4 +28,16 @@ public class UserImpl implements UserService {
     public void addUser(User user){
         userRepository.save(user);
     }
+
+    @Override
+    public User findByUsername(String username) {
+        return userRepository.findByUsername(username);
+    }
+
+    @Override
+    public User getByUsername(String username) {
+        return userRepository.getByUsername(username);
+    }
+
+
 }
