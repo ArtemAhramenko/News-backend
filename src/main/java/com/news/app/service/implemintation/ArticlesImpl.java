@@ -13,22 +13,21 @@ import java.util.Optional;
 @Service
 public class ArticlesImpl implements ArticlesService {
 
-    private final ArticlesRepository articlesRepository;
-
     @Autowired
-    public ArticlesImpl(ArticlesRepository articlesRepository) {
-        this.articlesRepository = articlesRepository;
-    }
+    private ArticlesRepository articlesRepository;
 
     public List<Articles> getAllArticles(){
         List<Articles> articles = new ArrayList<>();
-        articles.addAll(articlesRepository.findAll());
+        articlesRepository.findAll().forEach(articles :: add);
         return articles;
+    }
+
+    public Optional<Articles> getArticleId(Long id) {
+        return articlesRepository.findById(id);
     }
 
     public void addArticle(Articles article){
         articlesRepository.save(article);
     }
 
-    public Articles getArticleById(Long id) { return articlesRepository.findOne(id); }
 }

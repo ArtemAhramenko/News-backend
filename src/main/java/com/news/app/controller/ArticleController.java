@@ -14,12 +14,8 @@ import java.util.Optional;
 @RestController
 @CrossOrigin(origins = "http://localhost:4200")
 public class ArticleController {
-    private final ArticlesService articlesService;
-
     @Autowired
-    public ArticleController(ArticlesService articlesService) {
-        this.articlesService = articlesService;
-    }
+    private ArticlesService articlesService;
 
     @RequestMapping(path="/getarticle")
     public List<Articles> getAllArticles(){
@@ -29,6 +25,12 @@ public class ArticleController {
     @RequestMapping(path="/addarticle")
     public void addArticles(Articles articles){
         articlesService.addArticle(articles);
+    }
+
+    @RequestMapping(path = "/getarticleid/{id}")
+    public Optional<Articles> getArticleId(@PathVariable Long id){
+        Optional<Articles> ar = articlesService.getArticleId(id);
+        return ar;
     }
 
     @RequestMapping(path = "/getarticleid/{id}")
