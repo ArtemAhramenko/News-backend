@@ -30,5 +30,8 @@ public class ArticlesImpl implements ArticlesService {
         articlesRepository.save(article);
     }
 
-    public Articles getArticleById(Long id) { return articlesRepository.findOne(id); }
+    public Articles getArticleId(Long id) {
+        Articles art = articlesRepository.findOne(id);
+        return art;
+    }
 }
