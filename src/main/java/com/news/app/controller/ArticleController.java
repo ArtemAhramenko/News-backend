@@ -26,7 +26,6 @@ public class ArticleController {
 
     @RequestMapping(method = RequestMethod.POST, path = "/getarticleid/{id}")
     public Articles getArticleId(@PathVariable Long id){
-        Articles article = articlesService.getArticleId(id);
-        return article;
+        return articlesService.getArticleById(id);
     }
 }
