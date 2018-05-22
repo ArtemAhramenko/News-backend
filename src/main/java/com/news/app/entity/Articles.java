@@ -28,11 +28,8 @@ public class Articles {
     @Column(nullable = false, updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
     @CreatedDate
-    private Date createdAt;
-    @Column(nullable = false)
-    @Temporal(TemporalType.TIMESTAMP)
-    @LastModifiedDate
-    private Date updatedAt;
+    private Date createdDate;
+
 
     public Articles(){
 
@@ -70,20 +67,12 @@ public class Articles {
         this.content = content;
     }
 
-    public Date getCreatedAt() {
-        return createdAt;
+    public Date getCreatedDate() {
+        return createdDate;
     }
 
-    public void setCreatedAt(Date createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public Date getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public void setUpdatedAt(Date updatedAt) {
-        this.updatedAt = updatedAt;
+    public void setCreatedDate(Date createdDate) {
+        this.createdDate = createdDate;
     }
 
     public String getDescription() {
