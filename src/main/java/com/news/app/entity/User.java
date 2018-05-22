@@ -31,7 +31,7 @@ public class User {
 
     @URL
     @Column(name = "profileImg")
-    private String profileImg = "https://x1.xingassets.com/assets/frontend_minified/img/users/nobody_m.original.jpg";
+    private String profileImg = "http://res.cloudinary.com/profunding/image/upload/v1505580510/default-user-image.jpg";
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "user_roles",
