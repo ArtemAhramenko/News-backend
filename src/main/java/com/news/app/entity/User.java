@@ -20,6 +20,10 @@ public class User {
     @Column(name = "password")
     private String password;
 
+
+    @Column(name = "article_id")
+    private Long article_id;
+
     @Column(name = "confirmation_token")
     private String confirmationToken;
 

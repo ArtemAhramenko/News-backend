@@ -29,6 +29,7 @@ public class MailConfig {
 
     @Bean
     public JavaMailSender getMailSender() {
+
         JavaMailSender mailSender = new JavaMailSenderImpl();
 
         ((JavaMailSenderImpl) mailSender).setHost(host);
@@ -43,5 +44,6 @@ public class MailConfig {
 
         return mailSender;
     }
+
 
 }
