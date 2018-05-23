@@ -18,6 +18,10 @@ public class ArticleController {
     public List<Articles> getAllArticles(){
         return articlesService.getAllArticles();
     }
+//
+//    public String getSection(@PathVariable Long id){
+//        return articlesService.getSectionById(id).getSection().getHeading();
+//    }
 
     @RequestMapping(path="/addarticle")
     public void addArticles(Articles articles){

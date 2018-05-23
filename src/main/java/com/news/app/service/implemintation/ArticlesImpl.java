@@ -21,8 +21,10 @@ public class ArticlesImpl implements ArticlesService {
         this.articlesRepository = articlesRepository;
     }
 
-    public List<Articles> getAllArticles(){
-        return new ArrayList<>((Collection<? extends Articles>) articlesRepository.findAll());
+    @Override
+    public  List<Articles> getAllArticles(){
+
+        return articlesRepository.findAll();
     }
 
     public void addArticle(Articles article){
@@ -30,4 +32,5 @@ public class ArticlesImpl implements ArticlesService {
     }
 
     public Articles getArticleById(Long id) { return articlesRepository.findOne(id); }
+
 }

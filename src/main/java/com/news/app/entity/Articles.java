@@ -1,5 +1,6 @@
 package com.news.app.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -30,6 +31,10 @@ public class Articles {
     @CreatedDate
     private Date createdDate;
 
+
+    @ManyToOne(optional = false, cascade = CascadeType.ALL)
+    @JoinColumn (name = "section_id")
+    private Section section;
 
     public Articles(){
 
@@ -73,6 +78,14 @@ public class Articles {
 
     public void setCreatedDate(Date createdDate) {
         this.createdDate = createdDate;
+    }
+
+    public Section getSection() {
+        return section;
+    }
+
+    public void setSection(Section section) {
+        this.section = section;
     }
 
     public String getDescription() {
