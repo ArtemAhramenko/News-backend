@@ -31,7 +31,7 @@ public class UserController {
         userService.addUser(user);
     }
 
-    @PreAuthorize("hasAuthority('READER')")
+    @PreAuthorize("isAuthenticated()")
     @GetMapping(path="/me/{id}")
     public UserChangeParamsDto showUser(@PathVariable Long id) {
         return userService.getUserById(id);
