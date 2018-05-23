@@ -20,6 +20,10 @@ public class Articles {
     @NotBlank
     private String title;
 
+    @ManyToOne
+    @JoinColumn(name = "user")
+    private User article_id;
+
     @NotBlank
     private String content;
     @NotBlank

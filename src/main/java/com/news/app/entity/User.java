@@ -3,6 +3,7 @@ package com.news.app.entity;
 import org.hibernate.validator.constraints.URL;
 
 import javax.persistence.*;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -19,6 +20,9 @@ public class User {
 
     @Column(name = "password")
     private String password;
+
+    @OneToMany(mappedBy = "article_id",cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Articles> article_id;
 
     @Column(name = "confirmation_token")
     private String confirmationToken;
