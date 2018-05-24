@@ -32,4 +32,8 @@ public class ArticleController {
     public Articles getArticleId(@PathVariable Long id){
         return articlesService.getArticleById(id);
     }
+    @RequestMapping(method = RequestMethod.POST, path = "/getsection/{id}")
+    public List<Articles> getArticleBySectionId(@PathVariable Long id){
+        return articlesService.getArticleBySectionId(id);
+    }
 }

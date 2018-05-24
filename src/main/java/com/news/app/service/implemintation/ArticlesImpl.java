@@ -1,6 +1,7 @@
 package com.news.app.service.implemintation;
 
 import com.news.app.entity.Articles;
+import com.news.app.entity.Section;
 import com.news.app.repository.ArticlesRepository;
 import com.news.app.service.ArticlesService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,5 +33,9 @@ public class ArticlesImpl implements ArticlesService {
     }
 
     public Articles getArticleById(Long id) { return articlesRepository.findOne(id); }
+
+    public List<Articles> getArticleBySectionId(Long id){
+        return articlesRepository.getAllBySectionId(id);
+    }
 
 }
