@@ -46,6 +46,7 @@ public class RegistrationImpl implements RegistrationService {
         newUser.setUsername(registrationRequestDto.getUsername());
         newUser.setEmail(registrationRequestDto.getEmail());
         newUser.setPassword(encodePass(registrationRequestDto.getPassword()));
+        newUser.setAlias(registrationRequestDto.getAlias());
         newUser.setEnabled(false);
         Set<Role> roles = new HashSet<>();
         roles.add(roleService.findByName("READER"));

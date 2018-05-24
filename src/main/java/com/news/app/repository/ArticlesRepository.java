@@ -11,5 +11,9 @@ import java.util.List;
 @Repository
 public interface ArticlesRepository extends JpaRepository<Articles, Long> {
     Articles findById(Long id);
+
+    List<Articles> getAllByUserId(Long id);
+
     List<Articles> getAllBySectionId(Long id);
+
 }

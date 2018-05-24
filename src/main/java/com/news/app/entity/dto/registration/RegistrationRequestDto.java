@@ -1,8 +1,5 @@
 package com.news.app.entity.dto.registration;
 
-
-import lombok.Getter;
-import lombok.Setter;
 import org.springframework.stereotype.Component;
 
 
@@ -11,6 +8,15 @@ public class RegistrationRequestDto {
     private String username;
     private String password;
     private String email;
+    private String alias;
+
+    public String getAlias() {
+        return alias;
+    }
+
+    public void setAlias(String alias) {
+        this.alias = alias;
+    }
 
     public String getUsername() {
         return username;

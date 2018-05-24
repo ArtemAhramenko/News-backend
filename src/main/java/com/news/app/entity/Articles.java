@@ -1,9 +1,7 @@
 package com.news.app.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -16,14 +14,8 @@ public class Articles {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    private Long user_id;
-
     @NotBlank
     private String title;
-
-    @ManyToOne
-    @JoinColumn(name = "user")
-    private User article_id;
 
     @NotBlank
     private String content;
@@ -39,6 +31,9 @@ public class Articles {
     @CreatedDate
     private Date createdDate;
 
+    @ManyToOne(optional = false, cascade = CascadeType.ALL)
+    @JoinColumn (name = "user_id")
+    private User user;
 
     @ManyToOne(optional = false, cascade = CascadeType.ALL)
     @JoinColumn (name = "section_id")
@@ -54,14 +49,6 @@ public class Articles {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public Long getUser_id() {
-        return user_id;
-    }
-
-    public void setUser_id(Long user_id) {
-        this.user_id = user_id;
     }
 
     public String getTitle() {
@@ -98,6 +85,14 @@ public class Articles {
 
     public String getDescription() {
         return description;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public void setDescription(String description) {

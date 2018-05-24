@@ -39,6 +39,7 @@ public class ArticlesImpl implements ArticlesService {
 
     public Articles getArticleById(Long id) { return articlesRepository.findOne(id); }
 
+
     public List<Articles> getArticleBySectionId(Long id){
         return articlesRepository.getAllBySectionId(id);
     }

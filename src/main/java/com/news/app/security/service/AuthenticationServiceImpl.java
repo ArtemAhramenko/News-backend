@@ -62,7 +62,12 @@ public class AuthenticationServiceImpl {
                 }
 
                 String token = this.authenticationHelper.generateToken(userDetails);
-                return new LoginResponseDto(token);
+                if (user.getAlias() == null) {
+                    user.setAlias("user"+user.getUsername());
+                    return new LoginResponseDto(token, user.getAlias());
+                } else {
+                    return new LoginResponseDto(token, user.getAlias());
+                }
             } else {
                 throw new RuntimeException("Authentication failed.");
             }
