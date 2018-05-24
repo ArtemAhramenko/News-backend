@@ -36,4 +36,8 @@ public class ArticleController {
     public List<Articles> getArticleBySectionId(@PathVariable Long id){
         return articlesService.getArticleBySectionId(id);
     }
+    @RequestMapping(path = "/getpopulararticle")
+    public List<Articles> getPopularArticle(){
+        return articlesService.getPopularArticles();
+    }
 }

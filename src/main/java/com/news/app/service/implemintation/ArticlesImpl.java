@@ -7,10 +7,7 @@ import com.news.app.service.ArticlesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class ArticlesImpl implements ArticlesService {
@@ -24,8 +21,16 @@ public class ArticlesImpl implements ArticlesService {
 
     @Override
     public  List<Articles> getAllArticles(){
+        List<Articles> articles = articlesRepository.findAll();
+        articles.sort(Comparator.comparing(Articles::getCreatedDate).reversed());
+        return articles;
+    }
 
-        return articlesRepository.findAll();
+    public List<Articles> getPopularArticles(){
+        List<Articles> popularArticles = articlesRepository.findAll();
+        popularArticles.sort(Comparator.comparing(Articles::getRating).reversed());
+        popularArticles = popularArticles.subList(0,10);
+        return popularArticles;
     }
 
     public void addArticle(Articles article){

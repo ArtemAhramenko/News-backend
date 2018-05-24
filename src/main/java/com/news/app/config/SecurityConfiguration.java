@@ -28,7 +28,7 @@ import org.springframework.security.web.authentication.www.BasicAuthenticationFi
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     private static final String[] AUTH_POST_RESPONSE_WHITELIST = new String[]{"/registration", "/auth" , "/socialAuth","/getsection/*", "/getarticleid/*"};
     private static final String[] AUTH_GET_RESPONSE_WHITELIST = new String[]{
-            "/getarticle", "/activate/{code}"
+            "/getarticle", "/getallsections", "/getpopulararticle", "/activate/{code}"
     };
 
 

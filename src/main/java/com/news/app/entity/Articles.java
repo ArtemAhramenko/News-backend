@@ -23,8 +23,12 @@ public class Articles {
 
     @NotBlank
     private String content;
+
     @NotBlank
     private String description;
+
+    @NotBlank
+    private float rating;
 
     @Column(nullable = false, updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
@@ -94,6 +98,14 @@ public class Articles {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public float getRating() {
+        return rating;
+    }
+
+    public void setRating(float rating) {
+        this.rating = rating;
     }
 }
 
