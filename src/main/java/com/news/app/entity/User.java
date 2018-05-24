@@ -1,8 +1,10 @@
 package com.news.app.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.validator.constraints.URL;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -12,17 +14,19 @@ public class User {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+
+
     @Column(name = "username")
     private String username;
+
+    @Column(name = "alias")
+    private String alias;
 
     @Column(name = "email")
     private String email;
 
     @Column(name = "password")
     private String password;
-
-    @OneToMany(mappedBy = "article_id",cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<Articles> article_id;
 
     @Column(name = "confirmation_token")
     private String confirmationToken;
@@ -32,6 +36,10 @@ public class User {
 
     @Column(name = "enabled")
     private boolean enabled;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
+    private List<Articles> news;
 
     @URL
     @Column(name = "profileImg")
@@ -56,6 +64,22 @@ public class User {
 
     public User() {
 
+    }
+
+    public List<Articles> getNews() {
+        return news;
+    }
+
+    public String getAlias() {
+        return alias;
+    }
+
+    public void setAlias(String alias) {
+        this.alias = alias;
+    }
+
+    public void setNews(List<Articles> news) {
+        this.news = news;
     }
 
     public Long getId() {

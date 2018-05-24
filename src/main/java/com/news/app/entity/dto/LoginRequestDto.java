@@ -12,7 +12,6 @@ import org.springframework.stereotype.Component;
 public class LoginRequestDto {
     private String username;
     private String password;
-
     public LoginRequestDto() {
     }
 

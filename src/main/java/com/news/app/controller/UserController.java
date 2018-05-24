@@ -32,6 +32,15 @@ public class UserController {
     }
 
     @PreAuthorize("isAuthenticated()")
+    @PostMapping(path="/me/{id}")
+    //TODO
+    public void profileChanges(User user){
+        System.out.println(user.getAlias());
+        System.out.println(user.getPassword());
+        userService.changeUser(user);
+    }
+
+    @PreAuthorize("isAuthenticated()")
     @GetMapping(path="/me/{id}")
     public UserChangeParamsDto showUser(@PathVariable Long id) {
         return userService.getUserById(id);

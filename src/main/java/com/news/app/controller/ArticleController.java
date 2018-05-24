@@ -3,6 +3,7 @@ package com.news.app.controller;
 import com.news.app.entity.Articles;
 import com.news.app.service.ArticlesService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -27,6 +28,14 @@ public class ArticleController {
     public void addArticles(Articles articles){
         articlesService.addArticle(articles);
     }
+
+    @PreAuthorize("hasAuthority('WRITER')")
+    @GetMapping(path="/create")
+    public String createArticlePage(){
+        return "/create";
+    }
+
+
 
     @RequestMapping(method = RequestMethod.POST, path = "/getarticleid/{id}")
     public Articles getArticleId(@PathVariable Long id){

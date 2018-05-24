@@ -33,4 +33,6 @@ public class ArticlesImpl implements ArticlesService {
 
     public Articles getArticleById(Long id) { return articlesRepository.findOne(id); }
 
+
+
 }

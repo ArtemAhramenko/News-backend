@@ -2,6 +2,7 @@ package com.news.app.service.implemintation;
 
 import com.news.app.entity.User;
 import com.news.app.entity.dto.UserChangeParamsDto;
+import com.news.app.repository.ArticlesRepository;
 import com.news.app.repository.UserRepository;
 import com.news.app.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,9 +16,12 @@ public class UserImpl implements UserService {
 
     private final UserRepository userRepository;
 
+    private final ArticlesRepository articlesRepository;
+
     @Autowired
-    public UserImpl(UserRepository userRepository) {
+    public UserImpl(UserRepository userRepository, ArticlesRepository articlesRepository) {
         this.userRepository = userRepository;
+        this.articlesRepository = articlesRepository;
     }
 
     public List<User> getAllUsers(){
@@ -51,9 +55,16 @@ public class UserImpl implements UserService {
         userChangeParamsDto.setPassword(user.getPassword());
         userChangeParamsDto.setProfileImg(user.getProfileImg());
         userChangeParamsDto.setUsername(user.getUsername());
+        userChangeParamsDto.setNews(articlesRepository.getAllByUserId(user.getId()));
+        userChangeParamsDto.setEmail(user.getEmail());
+        userChangeParamsDto.setAlias(user.getAlias());
         return userChangeParamsDto;
     }
 
-
-
+    @Override
+    public void changeUser(User user) {
+        User myUser = userRepository.findOne(user.getId());
+        myUser.setAlias(user.getAlias());
+        myUser.setPassword(user.getPassword());
+    }
 }

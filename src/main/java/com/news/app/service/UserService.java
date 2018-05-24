@@ -12,7 +12,7 @@ public interface UserService {
     void addUser(User user);
     User findByUsername(String username);
     User getByUsername(String username);
-
+    void changeUser(User user);
     UserChangeParamsDto getUserById(Long id);
 }
 
