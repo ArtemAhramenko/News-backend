@@ -9,4 +9,6 @@ public interface ArticlesService {
     List<Articles> getAllArticles();
     void addArticle(Articles article);
     Articles getArticleById(Long id);
+    List<Articles> getArticleBySectionId(Long id);
+    List<Articles> getPopularArticles();
 }
