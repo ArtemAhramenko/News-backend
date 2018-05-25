@@ -29,7 +29,7 @@ public class ArticlesImpl implements ArticlesService {
     public List<Articles> getPopularArticles(){
         List<Articles> popularArticles = articlesRepository.findAll();
         popularArticles.sort(Comparator.comparing(Articles::getRating).reversed());
-        popularArticles = popularArticles.subList(0,10);
+        popularArticles = popularArticles.subList(0,3);
         return popularArticles;
     }
 

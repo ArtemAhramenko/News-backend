@@ -1,11 +1,15 @@
 package com.news.app.service.implemintation;
 
 import com.news.app.entity.User;
+import com.news.app.entity.dto.PageChangesDto;
 import com.news.app.entity.dto.UserChangeParamsDto;
+import com.news.app.exception.registration.AliasAlreadyExistException;
+import com.news.app.exception.registration.BadDataException;
 import com.news.app.repository.ArticlesRepository;
 import com.news.app.repository.UserRepository;
 import com.news.app.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -62,9 +66,32 @@ public class UserImpl implements UserService {
     }
 
     @Override
-    public void changeUser(User user) {
-        User myUser = userRepository.findOne(user.getId());
-        myUser.setAlias(user.getAlias());
-        myUser.setPassword(user.getPassword());
+    public void changeUser(PageChangesDto pageChangesDto) {
+        User myUser = userRepository.findOne(pageChangesDto.getId());
+        if (myUser.getAlias().equals(pageChangesDto.getAlias())) {
+            checkUserFields(myUser, pageChangesDto);
+        } else if (userRepository.findByAlias(pageChangesDto.getAlias()) == null) {
+            checkUserFields(myUser, pageChangesDto);
+        } else {
+            throw new AliasAlreadyExistException();
+        }
+
+    }
+
+
+    private void checkUserFields(User myUser, PageChangesDto pageChangesDto) {
+        if (!pageChangesDto.getAlias().isEmpty() && !pageChangesDto.getPassword().isEmpty()) {
+            myUser.setAlias(pageChangesDto.getAlias());
+            if (myUser.getPassword().equals(pageChangesDto.getPassword())) {
+                myUser.setPassword(pageChangesDto.getPassword());
+            } else {
+                BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+                pageChangesDto.setPassword(bCryptPasswordEncoder.encode(pageChangesDto.getPassword()));
+                myUser.setPassword(pageChangesDto.getPassword());
+            }
+            userRepository.save(myUser);
+        } else {
+            throw new BadDataException();
+        }
     }
 }

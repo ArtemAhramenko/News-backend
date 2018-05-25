@@ -1,6 +1,7 @@
 package com.news.app.service;
 
 import com.news.app.entity.User;
+import com.news.app.entity.dto.PageChangesDto;
 import com.news.app.entity.dto.UserChangeParamsDto;
 
 import java.util.List;
@@ -12,7 +13,7 @@ public interface UserService {
     void addUser(User user);
     User findByUsername(String username);
     User getByUsername(String username);
-    void changeUser(User user);
+    void changeUser(PageChangesDto pageChangesDto);
     UserChangeParamsDto getUserById(Long id);
 }
 

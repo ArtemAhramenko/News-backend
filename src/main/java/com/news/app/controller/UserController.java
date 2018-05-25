@@ -1,6 +1,7 @@
 package com.news.app.controller;
 
 import com.news.app.entity.User;
+import com.news.app.entity.dto.PageChangesDto;
 import com.news.app.entity.dto.UserChangeParamsDto;
 import com.news.app.service.UserService;
 import jdk.nashorn.internal.parser.JSONParser;
@@ -31,13 +32,12 @@ public class UserController {
         userService.addUser(user);
     }
 
-    @PreAuthorize("isAuthenticated()")
-    @PostMapping(path="/me/{id}")
-    //TODO
-    public void profileChanges(User user){
-        System.out.println(user.getAlias());
-        System.out.println(user.getPassword());
-        userService.changeUser(user);
+    @PostMapping(path="/changeMe")
+    public void profileChanges(@RequestBody PageChangesDto pageChangesDto){
+        System.out.println(pageChangesDto.getAlias());
+        System.out.println(pageChangesDto.getId());
+        System.out.println(pageChangesDto.getPassword());
+        userService.changeUser(pageChangesDto);
     }
 
     @PreAuthorize("isAuthenticated()")

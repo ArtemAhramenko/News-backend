@@ -26,7 +26,8 @@ import org.springframework.security.web.authentication.www.BasicAuthenticationFi
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
-    private static final String[] AUTH_POST_RESPONSE_WHITELIST = new String[]{"/registration", "/auth" , "/socialAuth","/getsection/*", "/getarticleid/*"};
+    private static final String[] AUTH_POST_RESPONSE_WHITELIST = new String[]{
+            "/registration", "/auth" , "/socialAuth","/getsection/*", "/getarticleid/*", "/changeMe"};
     private static final String[] AUTH_GET_RESPONSE_WHITELIST = new String[]{
             "/getarticle", "/getallsections", "/getpopulararticle", "/activate/{code}"
     };
