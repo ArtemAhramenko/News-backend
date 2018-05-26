@@ -1,5 +1,6 @@
 package com.news.app.service.implemintation;
 
+import com.news.app.entity.ArticleCreate;
 import com.news.app.entity.Articles;
 import com.news.app.entity.Section;
 import com.news.app.repository.ArticlesRepository;
@@ -34,6 +35,9 @@ public class ArticlesImpl implements ArticlesService {
     }
 
     public void addArticle(Articles article){
+//        Articles articles = new Articles();
+//        articles.setContent(article.getContent());
+        System.out.println(article.getContent());
         articlesRepository.save(article);
     }
 
