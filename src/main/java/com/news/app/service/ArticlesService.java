@@ -1,5 +1,6 @@
 package com.news.app.service;
 
+import com.news.app.entity.ArticleCreate;
 import com.news.app.entity.Articles;
 
 import java.util.List;

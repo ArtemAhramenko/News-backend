@@ -1,5 +1,6 @@
 package com.news.app.controller;
 
+import com.news.app.entity.ArticleCreate;
 import com.news.app.entity.Articles;
 import com.news.app.service.ArticlesService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,14 +20,11 @@ public class ArticleController {
     public List<Articles> getAllArticles(){
         return articlesService.getAllArticles();
     }
-//
-//    public String getSection(@PathVariable Long id){
-//        return articlesService.getSectionById(id).getSection().getHeading();
-//    }
 
-    @RequestMapping(path="/addarticle")
-    public void addArticles(Articles articles){
-        articlesService.addArticle(articles);
+    @PreAuthorize("isAuthenticated()")
+    @PostMapping(path="/addarticle")
+    public void addArticles(@RequestBody Articles article){
+        articlesService.addArticle(article);
     }
 
     @PreAuthorize("hasAuthority('WRITER')")
@@ -35,18 +33,19 @@ public class ArticleController {
         return "/create";
     }
 
-
-
     @RequestMapping(method = RequestMethod.POST, path = "/getarticleid/{id}")
     public Articles getArticleId(@PathVariable Long id){
         return articlesService.getArticleById(id);
     }
+
     @RequestMapping(method = RequestMethod.POST, path = "/getsection/{id}")
     public List<Articles> getArticleBySectionId(@PathVariable Long id){
         return articlesService.getArticleBySectionId(id);
     }
+
     @RequestMapping(path = "/getpopulararticle")
     public List<Articles> getPopularArticle(){
         return articlesService.getPopularArticles();
     }
+
 }
