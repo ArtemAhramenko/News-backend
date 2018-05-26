@@ -23,8 +23,14 @@ public class ArticleController {
 
     @PreAuthorize("isAuthenticated()")
     @PostMapping(path="/addarticle")
-    public void addArticles(@RequestBody Articles article){
-        articlesService.addArticle(article);
+    public void addArticles(@RequestBody ArticleCreate articleCreate){
+        System.out.println(articleCreate.getContent());
+        System.out.println(articleCreate.getDescription());
+        System.out.println(articleCreate.getUserId());
+        System.out.println(articleCreate.getTitle());
+        System.out.println(articleCreate.getCreateDate());
+        System.out.println(articleCreate.getSectionId());
+        articlesService.addArticle(articleCreate);
     }
 
     @PreAuthorize("hasAuthority('WRITER')")

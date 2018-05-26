@@ -2,8 +2,9 @@ package com.news.app.service.implemintation;
 
 import com.news.app.entity.ArticleCreate;
 import com.news.app.entity.Articles;
-import com.news.app.entity.Section;
 import com.news.app.repository.ArticlesRepository;
+import com.news.app.repository.SectionRepository;
+import com.news.app.repository.UserRepository;
 import com.news.app.service.ArticlesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,10 +15,14 @@ import java.util.*;
 public class ArticlesImpl implements ArticlesService {
 
     private final ArticlesRepository articlesRepository;
+    private final SectionRepository sectionRepository;
+    private final UserRepository userRepository;
 
     @Autowired
-    public ArticlesImpl(ArticlesRepository articlesRepository) {
+    public ArticlesImpl(ArticlesRepository articlesRepository, SectionRepository sectionRepository, UserRepository userRepository) {
         this.articlesRepository = articlesRepository;
+        this.sectionRepository = sectionRepository;
+        this.userRepository = userRepository;
     }
 
     @Override
@@ -34,11 +39,16 @@ public class ArticlesImpl implements ArticlesService {
         return popularArticles;
     }
 
-    public void addArticle(Articles article){
-//        Articles articles = new Articles();
-//        articles.setContent(article.getContent());
-        System.out.println(article.getContent());
-        articlesRepository.save(article);
+    public void addArticle(ArticleCreate articleCreate){
+        Articles newArticle = new Articles();
+        newArticle.setContent(articleCreate.getContent());
+        newArticle.setCreatedDate(new Date());
+        newArticle.setDescription(articleCreate.getDescription());
+        newArticle.setTitle(articleCreate.getTitle());
+        newArticle.setRating(4.0);
+        newArticle.setUser(userRepository.findOne(articleCreate.getUserId()));
+        newArticle.setSection(sectionRepository.getOne(articleCreate.getSectionId()));
+        articlesRepository.save(newArticle);
     }
 
     public Articles getArticleById(Long id) { return articlesRepository.findOne(id); }

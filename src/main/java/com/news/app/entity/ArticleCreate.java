@@ -4,20 +4,40 @@ import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import java.util.Date;
 
 public class ArticleCreate {
 
-    private Long id;
+    private Long userId;
     private String title;
     private String description;
     private String content;
+    private Long sectionId;
+    private Date createDate;
 
-    public Long getId() {
-        return id;
+
+    public Long getSectionId() {
+        return sectionId;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setSectionId(Long sectionId) {
+        this.sectionId = sectionId;
+    }
+
+    public Date getCreateDate() {
+        return createDate;
+    }
+
+    public void setCreateDate(Date createDate) {
+        this.createDate = createDate;
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 
     public String getTitle() {
