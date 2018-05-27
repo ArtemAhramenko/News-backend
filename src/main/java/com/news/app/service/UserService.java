@@ -15,6 +15,8 @@ public interface UserService {
     User getByUsername(String username);
     void changeUser(PageChangesDto pageChangesDto);
     UserChangeParamsDto getUserById(Long id);
+    void disableUser(Long id);
+    void deleteUser(Long id);
 }
 
 

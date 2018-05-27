@@ -6,12 +6,14 @@ import com.news.app.entity.dto.registration.RegistrationResponseStatus;
 import com.news.app.exception.EmailSendingException;
 import com.news.app.exception.registration.*;
 import com.news.app.service.RegistrationService;
+import jdk.nashorn.internal.parser.JSONParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletRequestWrapper;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:4200")
@@ -26,7 +28,11 @@ public class RegistrationController {
 
     @PostMapping("/registration")
     public RegistrationRequestDto addUser (@RequestBody RegistrationRequestDto registrationRequestDto){
-        return registrationService.register(registrationRequestDto);
+        try {
+            return registrationService.register(registrationRequestDto);
+        } catch (Throwable t){
+            throw new Error("Incorrect data");
+        }
     }
 
     @GetMapping("/activate/{code}")

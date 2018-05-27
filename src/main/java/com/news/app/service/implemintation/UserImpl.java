@@ -1,5 +1,6 @@
 package com.news.app.service.implemintation;
 
+import com.news.app.entity.Articles;
 import com.news.app.entity.User;
 import com.news.app.entity.dto.PageChangesDto;
 import com.news.app.entity.dto.UserChangeParamsDto;
@@ -13,6 +14,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -59,7 +61,9 @@ public class UserImpl implements UserService {
         userChangeParamsDto.setPassword(user.getPassword());
         userChangeParamsDto.setProfileImg(user.getProfileImg());
         userChangeParamsDto.setUsername(user.getUsername());
-        userChangeParamsDto.setNews(articlesRepository.getAllByUserId(user.getId()));
+        List<Articles> articles = articlesRepository.getAllByUserId(user.getId());
+        articles.sort(Comparator.comparing(Articles::getCreatedDate).reversed());
+        userChangeParamsDto.setNews(articles);
         userChangeParamsDto.setEmail(user.getEmail());
         userChangeParamsDto.setAlias(user.getAlias());
         return userChangeParamsDto;
@@ -93,5 +97,18 @@ public class UserImpl implements UserService {
         } else {
             throw new BadDataException();
         }
+    }
+
+    @Override
+    public void disableUser(Long id) {
+        User user = userRepository.findOne(id);
+        user.setBanned(true);
+        userRepository.save(user);
+    }
+
+    @Override
+    public void deleteUser(Long id) {
+        User user = userRepository.findOne(id);
+        userRepository.delete(user);
     }
 }
