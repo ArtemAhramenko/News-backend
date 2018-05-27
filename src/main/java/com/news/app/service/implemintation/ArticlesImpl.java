@@ -45,7 +45,7 @@ public class ArticlesImpl implements ArticlesService {
         newArticle.setCreatedDate(new Date());
         newArticle.setDescription(articleCreate.getDescription());
         newArticle.setTitle(articleCreate.getTitle());
-        newArticle.setRating(4.0);
+        newArticle.setRating(0.0);
         newArticle.setUser(userRepository.findOne(articleCreate.getUserId()));
         newArticle.setSection(sectionRepository.getOne(articleCreate.getSectionId()));
         articlesRepository.save(newArticle);

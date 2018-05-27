@@ -22,9 +22,14 @@ public class UserController {
         this.userService = userService;
     }
 
-    @RequestMapping(path="/getuser")
+    @GetMapping(path="/getuser")
     public List<User> getAllUsers(){
         return userService.getAllUsers();
+    }
+
+    @PostMapping(path="/getUserByUsername")
+    public User getUserByUsername(@RequestBody String username){
+        return userService.getByUsername(username);
     }
 
     @RequestMapping(path="/adduser")
@@ -43,6 +48,11 @@ public class UserController {
     @PreAuthorize("isAuthenticated()")
     @GetMapping(path="/me/{id}")
     public UserChangeParamsDto showUser(@PathVariable Long id) {
+        return userService.getUserById(id);
+    }
+
+    @PostMapping(path="/selectedUser/{id}")
+    public UserChangeParamsDto getUserByUsername(@PathVariable Long id){
         return userService.getUserById(id);
     }
 
