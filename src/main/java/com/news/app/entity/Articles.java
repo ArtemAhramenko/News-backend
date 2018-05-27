@@ -23,7 +23,7 @@ public class Articles {
     @NotBlank
     private String description;
 
-    private double rating;
+    private double averageRating;
 
     @Column(nullable = false, updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
@@ -98,12 +98,12 @@ public class Articles {
         this.description = description;
     }
 
-    public double getRating() {
-        return rating;
+    public double getAverageRating() {
+        return averageRating;
     }
 
-    public void setRating(double rating) {
-        this.rating = rating;
+    public void setAverageRating(double averageRating) {
+        this.averageRating = averageRating;
     }
 }
 

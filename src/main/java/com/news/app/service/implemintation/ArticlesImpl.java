@@ -34,8 +34,8 @@ public class ArticlesImpl implements ArticlesService {
 
     public List<Articles> getPopularArticles(){
         List<Articles> popularArticles = articlesRepository.findAll();
-        popularArticles.sort(Comparator.comparing(Articles::getRating).reversed());
-        popularArticles = popularArticles.subList(0,3);
+        popularArticles.sort(Comparator.comparing(Articles::getAverageRating).reversed());
+        popularArticles = popularArticles.subList(0,10);
         return popularArticles;
     }
 
@@ -45,7 +45,7 @@ public class ArticlesImpl implements ArticlesService {
         newArticle.setCreatedDate(new Date());
         newArticle.setDescription(articleCreate.getDescription());
         newArticle.setTitle(articleCreate.getTitle());
-        newArticle.setRating(4.0);
+        newArticle.setAverageRating(0.0);
         newArticle.setUser(userRepository.findOne(articleCreate.getUserId()));
         newArticle.setSection(sectionRepository.getOne(articleCreate.getSectionId()));
         articlesRepository.save(newArticle);
@@ -58,4 +58,14 @@ public class ArticlesImpl implements ArticlesService {
         return articlesRepository.getAllBySectionId(id);
     }
 
+    public double getArticleRating(Long articleId){
+        return   articlesRepository.findOne(articleId).getAverageRating();
+    }
+    public void calculateAverageRating(Long articleId, int usersCount, double userRating){
+        Articles articles = articlesRepository.findOne(articleId);
+        double averageRating = articles.getAverageRating();
+        double newAverageRating = (((averageRating * usersCount) + userRating) / (usersCount + 1));
+        articles.setAverageRating(newAverageRating);
+        articlesRepository.save(articles);
+    }
 }
