@@ -1,6 +1,10 @@
 package com.news.app.entity;
 
+import org.hibernate.validator.constraints.Length;
+
 import javax.persistence.*;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 
 @Entity
 @Table(name="rating")
@@ -17,6 +21,8 @@ public class Rating {
     private Long articleId;
 
     @Column(name = "user_rating")
+    @Max(5)
+    @Min(0)
     private double userRating;
 
     public Long getId() {
