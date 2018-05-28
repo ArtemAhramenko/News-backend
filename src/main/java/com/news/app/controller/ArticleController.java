@@ -3,6 +3,7 @@ package com.news.app.controller;
 import com.news.app.entity.ArticleCreate;
 import com.news.app.entity.Articles;
 import com.news.app.service.ArticlesService;
+import jdk.nashorn.internal.parser.JSONParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -16,34 +17,34 @@ public class ArticleController {
     @Autowired
     private ArticlesService articlesService;
 
-    @RequestMapping(path="/getarticle")
+    @GetMapping(path="/getarticle")
     public List<Articles> getAllArticles(){
         return articlesService.getAllArticles();
     }
 
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("hasAnyAuthority('WRITER', 'ADMIN')")
     @PostMapping(path="/addarticle")
     public void addArticles(@RequestBody ArticleCreate articleCreate){
         articlesService.addArticle(articleCreate);
     }
 
-    @PreAuthorize("hasAuthority('WRITER')")
+    @PreAuthorize("hasAnyAuthority('WRITER', 'ADMIN')")
     @GetMapping(path="/create")
     public String createArticlePage(){
-        return "/create";
+        return JSONParser.quote("auth");
     }
 
-    @RequestMapping(method = RequestMethod.POST, path = "/getarticleid/{id}")
+    @PostMapping(path = "/getarticleid/{id}")
     public Articles getArticleId(@PathVariable Long id){
         return articlesService.getArticleById(id);
     }
 
-    @RequestMapping(method = RequestMethod.POST, path = "/getsection/{id}")
+    @PostMapping(path = "/getsection/{id}")
     public List<Articles> getArticleBySectionId(@PathVariable Long id){
         return articlesService.getArticleBySectionId(id);
     }
 
-    @RequestMapping(path = "/getpopulararticle")
+    @GetMapping(path = "/getpopulararticle")
     public List<Articles> getPopularArticle(){
         return articlesService.getPopularArticles();
     }

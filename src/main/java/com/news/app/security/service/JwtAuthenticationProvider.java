@@ -17,7 +17,7 @@ import java.util.Objects;
 @Component
 public class JwtAuthenticationProvider implements AuthenticationProvider {
 
-    private static final long MILLIS_IN_SECOND = 1000L;
+    private static final long MILLIS_IN_SECOND = 10800L;
 
     private final UserRepository userRepository;
     private final AuthenticationHelper authenticationHelper;

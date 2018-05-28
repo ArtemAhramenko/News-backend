@@ -1,7 +1,6 @@
 package com.news.app.controller;
 
-import com.news.app.entity.User;
-import com.news.app.service.UserService;
+import com.news.app.service.AdminService;
 import jdk.nashorn.internal.parser.JSONParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -12,23 +11,23 @@ import org.springframework.web.bind.annotation.*;
 public class AdminController {
 
     @Autowired
-    private final UserService userService;
+    private final AdminService adminService;
 
-    public AdminController(UserService userService) {
-        this.userService = userService;
+    public AdminController(AdminService adminService) {
+        this.adminService = adminService;
     }
 
     @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping(path="/disableuser")
     public String disableUser(@RequestBody Long id){
-        userService.disableUser(id);
+        adminService.disableUser(id);
         return JSONParser.quote("User with id "+ id.toString() + " is disabled");
     }
 
     @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping(path="/deleteuser")
     public String deleteUser(@RequestBody Long id){
-        userService.deleteUser(id);
+        adminService.deleteUser(id);
         return JSONParser.quote("User with id "+ id.toString() + " is deleted");
     }
 

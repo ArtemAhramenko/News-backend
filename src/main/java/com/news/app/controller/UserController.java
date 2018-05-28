@@ -22,6 +22,7 @@ public class UserController {
         this.userService = userService;
     }
 
+    @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping(path="/getuser")
     public List<User> getAllUsers(){
         return userService.getAllUsers();
@@ -33,15 +34,13 @@ public class UserController {
     }
 
     @RequestMapping(path="/adduser")
-    public void addArticles(User user){
+    public void addUser(User user){
         userService.addUser(user);
     }
 
+    @PreAuthorize("isAuthenticated()")
     @PostMapping(path="/changeMe")
     public void profileChanges(@RequestBody PageChangesDto pageChangesDto){
-        System.out.println(pageChangesDto.getAlias());
-        System.out.println(pageChangesDto.getId());
-        System.out.println(pageChangesDto.getPassword());
         userService.changeUser(pageChangesDto);
     }
 
