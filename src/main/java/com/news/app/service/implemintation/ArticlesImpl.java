@@ -14,6 +14,8 @@ import java.util.*;
 @Service
 public class ArticlesImpl implements ArticlesService {
 
+    private final double START_RATING = 0.0;
+    private final int MAX_POPULAR_LIST = 10;
     private final ArticlesRepository articlesRepository;
     private final SectionRepository sectionRepository;
     private final UserRepository userRepository;
@@ -34,21 +36,33 @@ public class ArticlesImpl implements ArticlesService {
 
     public List<Articles> getPopularArticles(){
         List<Articles> popularArticles = articlesRepository.findAll();
-        popularArticles.sort(Comparator.comparing(Articles::getRating).reversed());
-        popularArticles = popularArticles.subList(0,3);
+        popularArticles.sort(Comparator.comparing(Articles::getAverageRating).reversed());
+        if (popularArticles.size() > MAX_POPULAR_LIST){
+        popularArticles = popularArticles.subList(0,MAX_POPULAR_LIST);
+        }
         return popularArticles;
     }
 
     public void addArticle(ArticleCreate articleCreate){
-        Articles newArticle = new Articles();
-        newArticle.setContent(articleCreate.getContent());
-        newArticle.setCreatedDate(new Date());
-        newArticle.setDescription(articleCreate.getDescription());
-        newArticle.setTitle(articleCreate.getTitle());
-        newArticle.setRating(0.0);
-        newArticle.setUser(userRepository.findOne(articleCreate.getUserId()));
-        newArticle.setSection(sectionRepository.getOne(articleCreate.getSectionId()));
-        articlesRepository.save(newArticle);
+        try {
+            Articles newArticle = new Articles();
+            String title = articleCreate.getTitle();
+            String description= articleCreate.getDescription();
+            String content = articleCreate.getContent();
+            if(title.length() <= 80 && description.length() <= 180 && content.length() <= 2000){
+                newArticle.setContent(content);
+                newArticle.setCreatedDate(new Date());
+                newArticle.setDescription(description);
+                newArticle.setTitle(title);
+                newArticle.setAverageRating(START_RATING);
+                newArticle.setUser(userRepository.findOne(articleCreate.getUserId()));
+                newArticle.setSection(sectionRepository.getOne(articleCreate.getSectionId()));
+                articlesRepository.save(newArticle);
+            }
+        }catch (Exception ex){
+           ex.printStackTrace();
+        }
+
     }
 
     public Articles getArticleById(Long id) { return articlesRepository.findOne(id); }
@@ -58,4 +72,14 @@ public class ArticlesImpl implements ArticlesService {
         return articlesRepository.getAllBySectionId(id);
     }
 
+    public double getArticleRating(Long articleId){
+        return   articlesRepository.findOne(articleId).getAverageRating();
+    }
+    public void calculateAverageRating(Long articleId, int usersCount, double userRating){
+        Articles articles = articlesRepository.findOne(articleId);
+        double averageRating = articles.getAverageRating();
+        double newAverageRating = (((averageRating * usersCount) + userRating) / (usersCount + 1));
+        articles.setAverageRating(newAverageRating);
+        articlesRepository.save(articles);
+    }
 }

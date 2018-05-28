@@ -12,4 +12,6 @@ public interface ArticlesService {
     Articles getArticleById(Long id);
     List<Articles> getArticleBySectionId(Long id);
     List<Articles> getPopularArticles();
+    double getArticleRating(Long articleId);
+    void calculateAverageRating(Long articleid, int usersCount, double userRating);
 }

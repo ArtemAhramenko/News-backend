@@ -1,9 +1,12 @@
 package com.news.app.entity;
 
+import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import java.util.Date;
 
 @Entity
@@ -23,7 +26,7 @@ public class Articles {
     @NotBlank
     private String description;
 
-    private double rating;
+    private double averageRating;
 
     @Column(nullable = false, updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
@@ -98,12 +101,12 @@ public class Articles {
         this.description = description;
     }
 
-    public double getRating() {
-        return rating;
+    public double getAverageRating() {
+        return averageRating;
     }
 
-    public void setRating(double rating) {
-        this.rating = rating;
+    public void setAverageRating(double averageRating) {
+        this.averageRating = averageRating;
     }
 }
 
