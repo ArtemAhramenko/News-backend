@@ -98,17 +98,4 @@ public class UserImpl implements UserService {
             throw new BadDataException();
         }
     }
-
-    @Override
-    public void disableUser(Long id) {
-        User user = userRepository.findOne(id);
-        user.setBanned(true);
-        userRepository.save(user);
-    }
-
-    @Override
-    public void deleteUser(Long id) {
-        User user = userRepository.findOne(id);
-        userRepository.delete(user);
-    }
 }

@@ -11,7 +11,6 @@ import com.news.app.exception.registration.UnconfirmedUserException;
 import com.news.app.security.service.AuthenticationServiceImpl;
 
 import com.news.app.security.ulogin.UloginAuthentication;
-import com.news.app.security.ulogin.UloginParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.BadCredentialsException;
