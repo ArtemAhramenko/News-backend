@@ -5,4 +5,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface RatingRepository extends JpaRepository<Rating, Long> {
     int countRatingsByArticleId(Long articleId);
+    int countRatingsByArticleIdAndUserId(Long articleId, Long UserId);
 }
