@@ -2,6 +2,7 @@ package com.news.app.service.implemintation;
 
 import com.news.app.entity.ArticleCreate;
 import com.news.app.entity.Articles;
+import com.news.app.entity.User;
 import com.news.app.repository.ArticlesRepository;
 import com.news.app.repository.SectionRepository;
 import com.news.app.repository.UserRepository;
@@ -49,13 +50,14 @@ public class ArticlesImpl implements ArticlesService {
             String title = articleCreate.getTitle();
             String description= articleCreate.getDescription();
             String content = articleCreate.getContent();
-            if(title.length() <= 80 && description.length() <= 180 && content.length() <= 2000){
+            if(title.length() <= 80 && description.length() <= 180 && content.length() <= 4000){
                 newArticle.setContent(content);
                 newArticle.setCreatedDate(new Date());
                 newArticle.setDescription(description);
                 newArticle.setTitle(title);
                 newArticle.setAverageRating(START_RATING);
-                newArticle.setUser(userRepository.findOne(articleCreate.getUserId()));
+                User user = userRepository.findById(articleCreate.getUserId());
+                newArticle.setUser(user);
                 newArticle.setSection(sectionRepository.getOne(articleCreate.getSectionId()));
                 articlesRepository.save(newArticle);
             }
