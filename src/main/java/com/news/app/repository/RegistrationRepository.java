@@ -5,10 +5,12 @@ import com.news.app.entity.dto.registration.RegistrationRequestDto;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 public interface RegistrationRepository extends CrudRepository<User, Long> {
 
-    RegistrationRequestDto findByUsername(String username);
+    Optional<RegistrationRequestDto> findByUsername(String username);
 
     RegistrationRequestDto findByEmail(String email);
 

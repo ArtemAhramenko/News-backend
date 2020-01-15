@@ -28,11 +28,7 @@ public class RegistrationController {
 
     @PostMapping("/registration")
     public RegistrationRequestDto addUser (@RequestBody RegistrationRequestDto registrationRequestDto){
-        try {
-            return registrationService.register(registrationRequestDto);
-        } catch (Throwable t){
-            throw new Error("Incorrect data");
-        }
+        return registrationService.register(registrationRequestDto);
     }
 
     @GetMapping("/activate/{code}")

@@ -1,5 +1,7 @@
 package com.news.app.exception.registration;
 
+import java.util.function.Supplier;
+
 /**
  * @author v.tarasevich
  * @version 1.0

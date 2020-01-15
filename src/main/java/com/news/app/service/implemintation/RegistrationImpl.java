@@ -1,6 +1,5 @@
 package com.news.app.service.implemintation;
 
-import com.news.app.entity.EnumRoles;
 import com.news.app.entity.Role;
 import com.news.app.entity.User;
 import com.news.app.entity.dto.LoginRequestDto;
@@ -8,62 +7,85 @@ import com.news.app.entity.dto.registration.RegistrationRequestDto;
 import com.news.app.exception.registration.EmailAlreadyExistException;
 import com.news.app.exception.registration.UsernameAlreadyExistException;
 import com.news.app.repository.RegistrationRepository;
+import com.news.app.repository.RoleRepository;
 import com.news.app.repository.UserRepository;
 import com.news.app.service.RegistrationService;
-import com.news.app.service.RoleService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
 @Service
 public class RegistrationImpl implements RegistrationService {
 
-    @Autowired
-    private  MailSender mailSender;
+    private final MailSender mailSender;
 
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
-    @Autowired
-    RoleService roleService;
+    private final RoleRepository roleRepository;
 
     private final RegistrationRepository registrationRepository;
 
     @Autowired
-    public RegistrationImpl(RegistrationRepository registrationRepository) {
+    public RegistrationImpl(final RegistrationRepository registrationRepository,
+                            final MailSender mailSender,
+                            final UserRepository userRepository,
+                            final RoleRepository roleRepository) {
         this.registrationRepository = registrationRepository;
+        this.mailSender = mailSender;
+        this.userRepository = userRepository;
+        this.roleRepository = roleRepository;
     }
 
     @Override
+    @Transactional
     public RegistrationRequestDto register(RegistrationRequestDto registrationRequestDto) {
         checkExisting(registrationRequestDto);
         User newUser = new User();
-        newUser.setUsername(registrationRequestDto.getUsername());
-        newUser.setEmail(registrationRequestDto.getEmail());
-        newUser.setPassword(encodePass(registrationRequestDto.getPassword()));
-        newUser.setAlias(registrationRequestDto.getAlias());
-        newUser.setEnabled(false);
-        Set<Role> roles = new HashSet<>();
-        roles.add(roleService.findByName("READER"));
-        newUser.setRoles(roles);
-        newUser.setConfirmationToken(UUID.randomUUID().toString());
+        setUserData(newUser, registrationRequestDto);
         registrationRepository.save(newUser);
-        if (!StringUtils.isEmpty(newUser.getEmail())) {
-                String message = String.format(
-                        "Hello, %s.\n" +
-                                "Welcome to NewsSite. To confirm your registration visit next link: http://localhost:8080/activate/%s",
-                        newUser.getUsername(),
-                        newUser.getConfirmationToken()
-                );
-                mailSender.sendMail(newUser.getEmail(), "Confirm registration", message);
-        }
-
+        sendMessage(newUser);
         return registrationRequestDto;
+    }
+
+    /**
+     * Set new user data.
+     * @param user user
+     * @param registrationRequestDto dto
+     */
+    private void setUserData(User user, RegistrationRequestDto registrationRequestDto) {
+        user.setUsername(registrationRequestDto.getUsername());
+        user.setEmail(registrationRequestDto.getEmail());
+        user.setPassword(encodePass(registrationRequestDto.getPassword()));
+        user.setAlias(registrationRequestDto.getAlias());
+        user.setEnabled(false);
+        Set<Role> roles = new HashSet<>();
+        roles.add(roleRepository.findByName("READER"));
+        user.setRoles(roles);
+        user.setConfirmationToken(UUID.randomUUID().toString());
+    }
+
+    /**
+     * For sending message on email.
+     *
+     * @param user new user
+     */
+    private void sendMessage(User user) {
+        if (!StringUtils.isEmpty(user.getEmail())) {
+            String message = String.format(
+                    "Hello, %s.\n" +
+                            "Welcome to NewsSite. To confirm your registration visit next link: http://localhost:8080/activate/%s",
+                    user.getUsername(),
+                    user.getConfirmationToken()
+            );
+            mailSender.sendMail(user.getEmail(), "Confirm registration", message);
+        }
     }
 
     private void checkExisting(RegistrationRequestDto registrationRequestDto) {
@@ -72,14 +94,8 @@ public class RegistrationImpl implements RegistrationService {
     }
 
     private void checkUsernameExist(String username) {
-        User user = userRepository.findUserByUsername(username);
-        if (user != null) {
-            throw new UsernameAlreadyExistException();
-        }
-        RegistrationRequestDto registrationData = registrationRepository.findByUsername(username);
-        if (registrationData != null) {
-            throw new UsernameAlreadyExistException();
-        }
+        userRepository.findUserByUsername(username).orElseThrow(UsernameAlreadyExistException::new);
+        registrationRepository.findByUsername(username).orElseThrow(UsernameAlreadyExistException::new);
     }
 
     private void checkEmailExist(String email) {
@@ -100,7 +116,7 @@ public class RegistrationImpl implements RegistrationService {
         newUser.setPassword(encodePass(loginRequestDto.getPassword()));
         newUser.setEnabled(true);
         Set<Role> roles = new HashSet<>();
-        roles.add(roleService.findByName("READER"));
+        roles.add(roleRepository.findByName("READER"));
         newUser.setRoles(roles);
         newUser.setConfirmationToken(UUID.randomUUID().toString());
         registrationRepository.save(newUser);
@@ -116,7 +132,7 @@ public class RegistrationImpl implements RegistrationService {
             return false;
         }
         Set<Role> roles = new HashSet<>();
-        roles.add(roleService.findByName("READER"));
+        roles.add(roleRepository.findByName("READER"));
         user.setRoles(roles);
         user.setConfirmationToken(null);
         user.setEnabled(true);
