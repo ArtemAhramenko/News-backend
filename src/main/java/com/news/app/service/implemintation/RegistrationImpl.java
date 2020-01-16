@@ -99,13 +99,25 @@ public class RegistrationImpl implements RegistrationService {
     }
 
     private void checkUsernameExist(String username) {
-        userRepository.findUserByUsername(username).orElseThrow(UsernameAlreadyExistException::new);
-        registrationRepository.findByUsername(username).orElseThrow(UsernameAlreadyExistException::new);
+        Optional<User> user = userRepository.findUserByUsername(username);
+        user.ifPresent(exception -> {
+            throw new UsernameAlreadyExistException();
+        });
+        Optional<RegistrationRequestDto> requestDto = registrationRepository.findByUsername(username);
+        requestDto.ifPresent(exception -> {
+            throw new UsernameAlreadyExistException();
+        });
     }
 
     private void checkEmailExist(String email) {
-        userRepository.findUserByEmail(email).orElseThrow(EmailAlreadyExistException::new);
-        registrationRepository.findByEmail(email).orElseThrow(EmailAlreadyExistException::new);
+        Optional<User> user = userRepository.findUserByEmail(email);
+        user.ifPresent(exception -> {
+            throw new EmailAlreadyExistException();
+        });
+        Optional<RegistrationRequestDto> requestDto = registrationRepository.findByEmail(email);
+        requestDto.ifPresent(exception -> {
+            throw new EmailAlreadyExistException();
+        });
     }
 
     @Override
