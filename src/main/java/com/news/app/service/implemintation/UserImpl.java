@@ -30,13 +30,13 @@ public class UserImpl implements UserService {
         this.articlesRepository = articlesRepository;
     }
 
-    public List<User> getAllUsers(){
+    public List<User> getAllUsers() {
         List<User> users = new ArrayList<>();
-        userRepository.findAll().forEach(users :: add);
+        userRepository.findAll().forEach(users::add);
         return users;
     }
 
-    public void addUser(User user){
+    public void addUser(User user) {
         userRepository.save(user);
     }
 
@@ -79,20 +79,16 @@ public class UserImpl implements UserService {
         } else {
             throw new AliasAlreadyExistException();
         }
-
     }
-
 
     private void checkUserFields(User myUser, PageChangesDto pageChangesDto) {
         if (!pageChangesDto.getAlias().isEmpty() && !pageChangesDto.getPassword().isEmpty()) {
             myUser.setAlias(pageChangesDto.getAlias());
-            if (myUser.getPassword().equals(pageChangesDto.getPassword())) {
-                myUser.setPassword(pageChangesDto.getPassword());
-            } else {
+            if (!myUser.getPassword().equals(pageChangesDto.getPassword())) {
                 BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
                 pageChangesDto.setPassword(bCryptPasswordEncoder.encode(pageChangesDto.getPassword()));
-                myUser.setPassword(pageChangesDto.getPassword());
             }
+            myUser.setPassword(pageChangesDto.getPassword());
             userRepository.save(myUser);
         } else {
             throw new BadDataException();

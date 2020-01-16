@@ -1,7 +1,6 @@
 package com.news.app.service.implemintation;
 
 import com.news.app.entity.Rating;
-import com.news.app.repository.ArticlesRepository;
 import com.news.app.repository.RatingRepository;
 import com.news.app.service.ArticlesService;
 import com.news.app.service.RatingService;
@@ -31,7 +30,6 @@ public class RatingImpl implements RatingService {
             double userRating = newRating.getUserRating();
             articlesService.calculateAverageRating(newRating.getArticleId(), usersCount, userRating);
             ratingRepository.save(newRating);
-            return ;
         }
     }
 
