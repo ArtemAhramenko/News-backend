@@ -12,7 +12,7 @@ public interface RegistrationRepository extends CrudRepository<User, Long> {
 
     Optional<RegistrationRequestDto> findByUsername(String username);
 
-    RegistrationRequestDto findByEmail(String email);
+    Optional<RegistrationRequestDto> findByEmail(String email);
 
     User findByConfirmationToken(String code);
 }

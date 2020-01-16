@@ -4,23 +4,22 @@ import com.news.app.entity.User;
 import com.news.app.entity.dto.LoginRequestDto;
 import com.news.app.security.ulogin.UloginParser;
 import com.news.app.service.AuthenticationService;
-import com.news.app.service.RegistrationService;
 import com.news.app.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
 public class AuthenticationImpl implements AuthenticationService {
 
-    @Autowired
-    private UloginParser uloginParser;
+    private final UloginParser uloginParser;
 
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
 
-    @Autowired
-    private RegistrationService registrationService;
+    public AuthenticationImpl(final UloginParser uloginParser,
+                              final UserService userService) {
+        this.uloginParser = uloginParser;
+        this.userService = userService;
+    }
 
     @Override
     public User addUser(LoginRequestDto loginRequestDto) {
@@ -28,12 +27,14 @@ public class AuthenticationImpl implements AuthenticationService {
         if (userService.findByUsername(loginRequestDto.getUsername()) == null) {
             return null;
         } else {
-            if (bCryptPasswordEncoder.matches(loginRequestDto.getPassword(), userService.getByUsername(loginRequestDto.getUsername()).getPassword())) {
+            final String password = userService.getByUsername(loginRequestDto.getUsername()).getPassword();
+            if (bCryptPasswordEncoder.matches(loginRequestDto.getPassword(), password)) {
                 return userService.getByUsername(loginRequestDto.getUsername());
             } else {
                 return null;
             }
         }
+        // maybe return null in the end and check isPresent(need tested)
     }
 
     @Override

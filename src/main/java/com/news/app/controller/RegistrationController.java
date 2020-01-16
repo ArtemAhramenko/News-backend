@@ -4,16 +4,26 @@ import com.news.app.entity.dto.registration.RegistrationErrorInfoDto;
 import com.news.app.entity.dto.registration.RegistrationRequestDto;
 import com.news.app.entity.dto.registration.RegistrationResponseStatus;
 import com.news.app.exception.EmailSendingException;
-import com.news.app.exception.registration.*;
+import com.news.app.exception.registration.EmailAlreadyExistException;
+import com.news.app.exception.registration.NewUserCreatingException;
+import com.news.app.exception.registration.RegistrationDataNotFoundException;
+import com.news.app.exception.registration.RegistrationDataSavingException;
+import com.news.app.exception.registration.UsernameAlreadyExistException;
 import com.news.app.service.RegistrationService;
-import jdk.nashorn.internal.parser.JSONParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletRequestWrapper;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:4200")

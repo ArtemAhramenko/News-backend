@@ -88,6 +88,11 @@ public class RegistrationImpl implements RegistrationService {
         }
     }
 
+    /**
+     * Check existing user.
+     *
+     * @param registrationRequestDto dto
+     */
     private void checkExisting(RegistrationRequestDto registrationRequestDto) {
         checkUsernameExist(registrationRequestDto.getUsername());
         checkEmailExist(registrationRequestDto.getEmail());
@@ -99,14 +104,8 @@ public class RegistrationImpl implements RegistrationService {
     }
 
     private void checkEmailExist(String email) {
-        User user = userRepository.findUserByEmail(email);
-        if (user != null) {
-            throw new EmailAlreadyExistException();
-        }
-        RegistrationRequestDto registrationData = registrationRepository.findByEmail(email);
-        if(registrationData != null) {
-            throw new EmailAlreadyExistException();
-        }
+        userRepository.findUserByEmail(email).orElseThrow(EmailAlreadyExistException::new);
+        registrationRepository.findByEmail(email).orElseThrow(EmailAlreadyExistException::new);
     }
 
     @Override
@@ -120,7 +119,6 @@ public class RegistrationImpl implements RegistrationService {
         newUser.setRoles(roles);
         newUser.setConfirmationToken(UUID.randomUUID().toString());
         registrationRepository.save(newUser);
-
         return loginRequestDto;
     }
 
